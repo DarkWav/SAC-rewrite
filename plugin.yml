@@ -1,0 +1,12 @@
+name: ShadowAntiCheat
+main: DarkWav\SAC\Main
+version: 4.0.0
+author: DarkWav
+api: [3.0.0]
+commands:
+  sac:
+    description: Shows ShadowAntiCheat version.
+    aliases: ["ShadowAntiCheat","AntiCheat","SAC"]
+  shadowanticheat:
+    description: Shows ShadowAntiCheat version.
+    aliases: ["ShadowAntiCheat","AntiCheat","SAC"]
