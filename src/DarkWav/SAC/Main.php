@@ -2,6 +2,12 @@
 declare(strict_types=1);
 namespace DarkWav\SAC;
 
+/*
+ *  ShadowAntiCheat by DarkWav.
+ *  Distributed under the MIT License.
+ *  Copyright (C) 2016-2019 DarkWav
+ */
+
 # imports
 
 use pocketmine\plugin\PluginBase;
@@ -10,29 +16,35 @@ use pocketmine\command\CommandSender;
 use pocketmine\command\Command;
 use pocketmine\utils\Config;
 
+use DarkWav\SAC\EventListener;
+use DarkWav\SAC\Analyzer;
+
 class Main extends PluginBase
 {
   #global variables
-  public $cl; #color of output messages
-  public $version = "4.0.0"; #declare current plugin version
-  public $logger; #current PluginLogger instance
-  public $server; #current Server instance
-  public $config; #get the plugins main configuration file
-  public function onEnable() : void #inintialisation when plugin is being loaded
+  public $cl;
+  public $version = "4.0.1";
+  public $logger;
+  public $server;
+  public $config;
+  public $Analyzers = array();
+  public function onEnable() : void
   {
-    $this->logger = $this->getServer()->getLogger(); #hook into ServerLogger to prevent auto-prefixing and link it to variable logger
-    $this->server = $this->getServer(); #link current Server instance to variable server
+    $this->logger = $this->getServer()->getLogger();
+    $this->server = $this->getServer();
+    $this->server->getPluginManager()->registerEvents(new EventListener($this), $this);
     @mkdir($this->getDataFolder()); #create folder for config files, ect
-    $this->saveDefaultConfig(); #save config.yml to the DataFolder if it doesn't exist yet
-    $this->config = $this->getConfig(); #link config.yml to config variable
+    $this->saveDefaultConfig();
+    $this->config = $this->getConfig();
     $this->cl = "3"; #set color for output messages to dark aqua
-    $this->logger->info("[SAC] > ShadowAntiCheat enabled"); #paint startup message, do not color it to prevent confusion of user.
+    $this->logger->info("[SAC] > ShadowAntiCheat enabled");
+
+    #config integrity check
+
     switch($this->config->get("plugin_version")) #check if the config file is compatible with the current version of the plugin.
     {
-      case "4.0.0": 
-      {
-        break; #do nothing if compatibility check passes
-      }
+      case $this->version: break;
+      case "4.0.0":  break;
       default:
       {
         $this->logger->error(TextFormat::RED . "[SAC] > Your configuration file is incompatible with this version of SAC, please delete ./plugin_data/ShadowAntiCheat/config.yml"); #throw error and nofify user about incompatible config
@@ -40,24 +52,59 @@ class Main extends PluginBase
         break;
       }
     }
+    
+    #analyzer management
+    #connect existing players with an analyzer instance
+
+    foreach($this->server->getOnlinePlayers() as $player)
+    {
+      $hash     = spl_object_hash($player);
+      $name     = $player->getName();
+      $oldhash  = null;
+      $analyzer = null;
+      foreach ($this->Analyzers as $key=>$ana)
+      {
+        if ($ana->PlayerName == $name)
+        {
+          $oldhash  = $key;
+          $analyzer = $ana;
+          $analyzer->Player = $player;
+        }
+      }
+      if ($oldhash != null)
+      {
+        unset($this->Analyzers[$oldhash]);
+        $this->Analyzers[$hash] = $analyzer;
+        $this->Analyzers[$hash]->onPlayerRejoin();
+      }
+      else
+      {
+        $observer = new Analyzer($player, $this);
+        $this->Analyzer[$hash] = $analyzer;
+        $this->Analyzer[$hash]->onPlayerJoin();
+      }
+    }
   }
-  public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool #listen to command executions
+
+  #command handling
+
+  public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool
   {
     switch($command->getName()) #get name of entered command and test for SAC commands
     {
-      case "sac": #perform actions if command name is "sac"
+      case "sac":
       {
-        $sender->sendMessage(TextFormat::ESCAPE."$this->cl"."[SAC] > ShadowAntiCheat v".$this->version." [Comet] by DarkWav"); #send info message
+        $sender->sendMessage(TextFormat::ESCAPE."$this->cl"."[SAC] > ShadowAntiCheat v".$this->version." [Comet] by DarkWav");
         break;
       }
-      case "shadowanticheat": #perform actions if command name is "shadowanticheat"
+      case "shadowanticheat":
       {
-        $sender->sendMessage(TextFormat::ESCAPE."$this->cl"."[SAC] > ShadowAntiCheat v".$this->version." [Comet] by DarkWav"); #send info message
+        $sender->sendMessage(TextFormat::ESCAPE."$this->cl"."[SAC] > ShadowAntiCheat v".$this->version." [Comet] by DarkWav");
         break;
       }
       default:
       {
-        break; #do nothing if the command name is different
+        break;
       }
     }
     return false; #do not influence the further processing of the command
