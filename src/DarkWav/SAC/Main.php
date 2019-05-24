@@ -34,11 +34,11 @@ class Main extends PluginBase
     {
         $this->logger = $this->getServer()->getLogger();
         $this->server = $this->getServer();
-        $this->server->getPluginManager()->registerEvents(new EventListener($this), $this);
-        @mkdir($this->getDataFolder()); #create folder for config files, ect
-        $this->saveDefaultConfig();
         $this->config = $this->getConfig();
         $this->cl = "3"; #set color for output messages to dark aqua
+        @mkdir($this->getDataFolder()); #create folder for config files, ect
+        $this->saveDefaultConfig();
+        $this->server->getPluginManager()->registerEvents(new EventListener($this), $this);
         $this->logger->info("[SAC] > ShadowAntiCheat enabled");
 
         #config integrity check
@@ -78,8 +78,8 @@ class Main extends PluginBase
                 $this->Analyzers[$hash]->onPlayerRejoin();
             } else {
                 $observer = new Analyzer($player, $this);
-                $this->Analyzer[$hash] = $analyzer;
-                $this->Analyzer[$hash]->onPlayerJoin();
+                $this->Analyzers[$hash] = $analyzer;
+                $this->Analyzers[$hash]->onPlayerJoin();
             }
         }
     }
