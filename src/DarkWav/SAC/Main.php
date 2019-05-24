@@ -23,7 +23,7 @@ class Main extends PluginBase
 {
   #global variables
   public $cl;
-  public $version = "4.0.1";
+  public $version = "4.0.2";
   public $logger;
   public $server;
   public $config;
@@ -45,6 +45,7 @@ class Main extends PluginBase
     {
       case $this->version: break;
       case "4.0.0":  break;
+      case "4.0.1":  break;
       default:
       {
         $this->logger->error(TextFormat::RED . "[SAC] > Your configuration file is incompatible with this version of SAC, please delete ./plugin_data/ShadowAntiCheat/config.yml"); #throw error and nofify user about incompatible config

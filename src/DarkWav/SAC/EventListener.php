@@ -8,12 +8,18 @@ namespace DarkWav\SAC;
  *  Copyright (C) 2016-2019 DarkWav
  */
 
+#basic imports
+
 use pocketmine\event\Listener;
 use pocketmine\event\Cancellable;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use DarkWav\SAC\Main;
 use DarkWav\SAC\Analyzer;
+
+#event that are listened
+
+use pocketmine\event\player\PlayerMoveEvent;
 
 class EventListener implements Listener
 {
@@ -72,4 +78,18 @@ class EventListener implements Listener
       $this->Main->Analyzers[$hash]->Player = null;
     }
   }
+
+  public function onMove(PlayerMoveEvent $event)
+  {
+    $plr      = $event->getPlayer();
+    $hash     = spl_object_hash($plr);
+    if (array_key_exists($hash , $this->Main->Analyzers))
+    {
+      if($plr != null and $this->Main->Analyzers[$hash]->Player != null)
+      {
+        $this->Main->Analyzers[$hash]->onPlayerMove($event);
+      }
+    }
+  }
+
 }
