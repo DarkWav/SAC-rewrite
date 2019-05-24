@@ -1,6 +1,5 @@
 <?php
 declare(strict_types=1);
-
 namespace DarkWav\SAC;
 
 /*
@@ -9,95 +8,118 @@ namespace DarkWav\SAC;
  *  Copyright (C) 2016-2019 DarkWav
  */
 
-use AttachableThreadedLogger;
 use pocketmine\Player;
-use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 
+use DarkWav\SAC\Main;
 use DarkWav\SAC\KickTask;
 
 #import checks
 
-use DarkWav\SAC\Angle;
-use DarkWav\SAC\AutoClicker;
-use DarkWav\SAC\FastBow;
-use DarkWav\SAC\FastBreak;
-use DarkWav\SAC\FastPlace;
-use DarkWav\SAC\Fly;
-use DarkWav\SAC\Glide;
-use DarkWav\SAC\Heuristics;
-use DarkWav\SAC\NoClip;
-use DarkWav\SAC\Reach;
-use DarkWav\SAC\Regen;
-use DarkWav\SAC\Speed;
-use DarkWav\SAC\Spider;
-use DarkWav\SAC\VClip;
-
+use DarkWav\SAC\checks\AngleCheck;
+use DarkWav\SAC\checks\AutoClickerCheck;
+use DarkWav\SAC\checks\CombatHeuristics;
+use DarkWav\SAC\checks\CriticalsCheck;
+use DarkWav\SAC\checks\FastBowCheck;
+use DarkWav\SAC\checks\FastBreakCheck;
+use DarkWav\SAC\checks\FastPlaceCheck;
+use DarkWav\SAC\checks\FlyCheck;
+use DarkWav\SAC\checks\GlideCheck;
+use DarkWav\SAC\checks\NoClipCheck;
+use DarkWav\SAC\checks\ReachCheck;
+use DarkWav\SAC\checks\RegenCheck;
+use DarkWav\SAC\checks\SpeedCheck;
+use DarkWav\SAC\checks\SpiderCheck;
+use DarkWav\SAC\checks\VClipCheck;
 
 class Analyzer
 {
-    #global variables
+  #golobal variables
+  public $Main;
+  public $Player;
+  public $PlayerName;
+  public $Server;
+  public $Logger;
+  public $Colorized;
 
-    /**
-     * @var Main $Main
-     */
-    public $Main;
+  #checks
 
-    /**
-     * @var Player $Player
-     */
-    public $Player;
+  public $AngleCheck;
+  public $AutoClickerCheck;
+  public $CombatHeuristics;
+  public $CriticalsCheck;
+  public $FastBowCheck;
+  public $FastBreakCheck;
+  public $FastPlaceCheck;
+  public $FlyCheck;
+  public $GlideCheck;
+  public $NoClipCheck;
+  public $ReachCheck;
+  public $RegenCheck;
+  public $SpeedCheck;
+  public $SpiderCheck;
+  public $VClipCheck;
 
-    /**
-     * @var string $PlayerName
-     */
-    public $PlayerName;
+  public function __construct($plr, Main $sac)
+  {
 
-    /**
-     * @var Server $Server
-     */
-    public $Server;
+    #initialize basic variables
 
-    /**
-     * @var AttachableThreadedLogger $Logger
-     */
-    public $Logger;
+    $this->Main       = $sac;
+    $this->Player     = $plr;
+    $this->PlayerName = $this->Player->getName();
+    $this->Server     = $this->Main->server;
+    $this->Logger     = $this->Main->logger;
+    $this->Colorized  = "3";
 
-    /**
-     * @var string $Colorized
-     */
-    public $Colorized;
+    #initialize checks
 
-    /**
-     * Analyzer constructor.
-     * @param Player $player
-     * @param Main $sac
-     */
-    public function __construct(Player $player, Main $sac)
-    {
-        #initialize basic variables
-        $this->Main = $sac;
-        $this->Player = $player;
-        $this->PlayerName = $this->Player->getName();
-        $this->Server = $this->Main->server;
-        $this->Logger = $this->Main->logger;
-        $this->Colorized = "3";
-    }
+    $this->AngleCheck       = new AngleCheck($this);
+    $this->AutoClickerCheck = new AutoClickerCheck($this);
+    $this->CombatHeuristics = new CombatHeuristics($this);
+    $this->CriticalsCheck   = new CriticalsCheck($this);
+    $this->FastBowCheck     = new FastBowCheck($this);
+    $this->FastBreakCheck   = new FastBreakCheck($this);
+    $this->FastPlaceCheck   = new FastPlaceCheck($this);
+    $this->FlyCheck         = new FlyCheck($this);
+    $this->GlideCheck       = new GlideCheck($this);
+    $this->NoClipCheck      = new NoClipCheck($this);
+    $this->ReachCheck       = new ReachCheck($this);
+    $this->RegenCheck       = new RegenCheck($this);
+    $this->SpeedCheck       = new SpeedCheck($this);
+    $this->SpiderCheck      = new SpiderCheck($this);
+    $this->VClipCheck       = new VClipCheck($this);
 
-    public function onPlayerJoin() : void
-    {
-        $this->Player->sendMessage(TextFormat::ESCAPE . $this->Colorized . "[SAC] > $this->PlayerName, I am watching you ...");
-        $this->Logger->info(TextFormat::ESCAPE . $this->Colorized . "[SAC] > $this->PlayerName, I am watching you ...");
-    }
+  }
 
-    public function onPlayerRejoin() : void
-    {
-        $this->Player->sendMessage(TextFormat::ESCAPE . $this->Colorized . "[SAC] > $this->PlayerName, I am still watching you ...");
-        $this->Logger->info(TextFormat::ESCAPE . $this->Colorized . "[SAC] > $this->PlayerName, I am still watching you ...");
-    }
+  public function onPlayerJoin() : void
+  {
+    $this->Player->sendMessage(TextFormat::ESCAPE.$this->Colorized."[SAC] > $this->PlayerName, I am watching you ...");
+    $this->Logger->info(TextFormat::ESCAPE.$this->Colorized."[SAC] > $this->PlayerName, I am watching you ...");
+  }
 
-    public function onPlayerQuit() : void
-    {
-        $this->Logger->info(TextFormat::ESCAPE . "$this->Colorized" . "[SAC] > $this->PlayerName is no longer watched...");
-    }
+  public function onPlayerRejoin() : void
+  {
+    $this->Player->sendMessage(TextFormat::ESCAPE.$this->Colorized."[SAC] > $this->PlayerName, I am still watching you ...");
+    $this->Logger->info(TextFormat::ESCAPE.$this->Colorized."[SAC] > $this->PlayerName, I am still watching you ...");
+  }
+
+  public function onPlayerQuit() : void
+  {
+    $this->Logger->info(TextFormat::ESCAPE."$this->Colorized" . "[SAC] > $this->PlayerName is no longer watched...");
+  }
+
+  public function onPlayerMove($event) : void
+  {
+    #process event first
+    $this->processPlayerMoveEvent($event);
+    #then run checks
+    $this->SpeedCheck->run();
+  }
+
+  public function processPlayerMoveEvent($event) : void
+  {
+    #TODO
+  }
+
 }
