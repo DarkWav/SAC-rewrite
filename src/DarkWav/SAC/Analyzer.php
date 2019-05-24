@@ -9,10 +9,11 @@ namespace DarkWav\SAC;
  *  Copyright (C) 2016-2019 DarkWav
  */
 
+use AttachableThreadedLogger;
 use pocketmine\Player;
+use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 
-use DarkWav\SAC\Main;
 use DarkWav\SAC\KickTask;
 
 #import checks
@@ -35,19 +36,48 @@ use DarkWav\SAC\VClip;
 
 class Analyzer
 {
-    #golobal variables
+    #global variables
+
+    /**
+     * @var Main $Main
+     */
     public $Main;
+
+    /**
+     * @var Player $Player
+     */
     public $Player;
+
+    /**
+     * @var string $PlayerName
+     */
     public $PlayerName;
+
+    /**
+     * @var Server $Server
+     */
     public $Server;
+
+    /**
+     * @var AttachableThreadedLogger $Logger
+     */
     public $Logger;
+
+    /**
+     * @var string $Colorized
+     */
     public $Colorized;
 
-    public function __construct($plr, Main $sac)
+    /**
+     * Analyzer constructor.
+     * @param Player $player
+     * @param Main $sac
+     */
+    public function __construct(Player $player, Main $sac)
     {
         #initialize basic variables
         $this->Main = $sac;
-        $this->Player = $plr;
+        $this->Player = $player;
         $this->PlayerName = $this->Player->getName();
         $this->Server = $this->Main->server;
         $this->Logger = $this->Main->logger;
@@ -70,5 +100,4 @@ class Analyzer
     {
         $this->Logger->info(TextFormat::ESCAPE . "$this->Colorized" . "[SAC] > $this->PlayerName is no longer watched...");
     }
-
 }

@@ -11,23 +11,45 @@ namespace DarkWav\SAC;
 
 # imports
 
+use AttachableThreadedLogger;
 use pocketmine\plugin\PluginBase;
+use pocketmine\Server;
 use pocketmine\utils\TextFormat;
 use pocketmine\command\CommandSender;
 use pocketmine\command\Command;
 use pocketmine\utils\Config;
 
-use DarkWav\SAC\EventListener;
-use DarkWav\SAC\Analyzer;
-
 class Main extends PluginBase
 {
     #global variables
+    /**
+     * @var string $cl
+     */
     public $cl;
+
+    /**
+     * @var string $version
+     */
     public $version = "4.0.1";
+
+    /**
+     * @var AttachableThreadedLogger $logger
+     */
     public $logger;
+
+    /**
+     * @var Server $server
+     */
     public $server;
+
+    /**
+     * @var Config $config
+     */
     public $config;
+
+    /**
+     * @var array $Analyzers
+     */
     public $Analyzers = array();
 
     public function onEnable() : void
@@ -86,6 +108,13 @@ class Main extends PluginBase
 
     #command handling
 
+    /**
+     * @param CommandSender $sender
+     * @param Command $command
+     * @param string $label
+     * @param array $args
+     * @return bool
+     */
     public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool
     {
         switch ($command->getName()) #get name of entered command and test for SAC commands

@@ -9,19 +9,33 @@ namespace DarkWav\SAC;
  *  Copyright (C) 2016-2019 DarkWav
  */
 
+use AttachableThreadedLogger;
 use pocketmine\event\Listener;
-use pocketmine\event\Cancellable;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
-use DarkWav\SAC\Main;
-use DarkWav\SAC\Analyzer;
+use pocketmine\Server;
 
 class EventListener implements Listener
 {
+    /**
+     * @var Main $Main
+     */
     public $Main;
+
+    /**
+     * @var AttachableThreadedLogger $Logger
+     */
     public $Logger;
+
+    /**
+     * @var Server $Server
+     */
     public $Server;
 
+    /**
+     * EventListener constructor.
+     * @param Main $mn
+     */
     public function __construct(Main $mn)
     {
         $this->Main = $mn;
@@ -29,22 +43,26 @@ class EventListener implements Listener
         $this->Server = $mn->getServer();
     }
 
+    /**
+     * @priority normal
+     * @param PlayerJoinEvent $event
+     */
     public function onJoin(PlayerJoinEvent $event)
     {
         $plr = $event->getPlayer();
         $hash = spl_object_hash($plr);
         $name = $plr->getName();
-        $oldhash = null;
+        $oldHash = null;
         $analyzer = null;
         foreach ($this->Main->Analyzers as $key => $ana) {
             if ($ana->PlayerName == $name) {
-                $oldhash = $key;
+                $oldHash = $key;
                 $analyzer = $ana;
                 $analyzer->Player = $plr;
             }
         }
-        if ($oldhash != null) {
-            unset($this->Main->Analyzers[$oldhash]);
+        if ($oldHash != null) {
+            unset($this->Main->Analyzers[$oldHash]);
             $this->Main->Analyzers[$hash] = $analyzer;
             $this->Main->Analyzers[$hash]->onPlayerRejoin();
         } else {
@@ -54,6 +72,10 @@ class EventListener implements Listener
         }
     }
 
+    /**
+     * @priority normal
+     * @param PlayerQuitEvent $event
+     */
     public function onQuit(PlayerQuitEvent $event)
     {
         $plr = $event->getPlayer();
