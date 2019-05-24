@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 namespace DarkWav\SAC;
 
 /*
@@ -34,40 +35,40 @@ use DarkWav\SAC\VClip;
 
 class Analyzer
 {
-  #golobal variables
-  public $Main;
-  public $Player;
-  public $PlayerName;
-  public $Server;
-  public $Logger;
-  public $Colorized;
+    #golobal variables
+    public $Main;
+    public $Player;
+    public $PlayerName;
+    public $Server;
+    public $Logger;
+    public $Colorized;
 
-  public function __construct($plr, Main $sac)
-  {
-    #initialize basic variables
-    $this->Main       = $sac;
-    $this->Player     = $plr;
-    $this->PlayerName = $this->Player->getName();
-    $this->Server     = $this->Main->server;
-    $this->Logger     = $this->Main->logger;
-    $this->Colorized  = "3";
-  }
+    public function __construct($plr, Main $sac)
+    {
+        #initialize basic variables
+        $this->Main = $sac;
+        $this->Player = $plr;
+        $this->PlayerName = $this->Player->getName();
+        $this->Server = $this->Main->server;
+        $this->Logger = $this->Main->logger;
+        $this->Colorized = "3";
+    }
 
-  public function onPlayerJoin() : void
-  {
-    $this->Player->sendMessage(TextFormat::ESCAPE.$this->Colorized."[SAC] > $this->PlayerName, I am watching you ...");
-    $this->Logger->info(TextFormat::ESCAPE.$this->Colorized."[SAC] > $this->PlayerName, I am watching you ...");
-  }
+    public function onPlayerJoin() : void
+    {
+        $this->Player->sendMessage(TextFormat::ESCAPE . $this->Colorized . "[SAC] > $this->PlayerName, I am watching you ...");
+        $this->Logger->info(TextFormat::ESCAPE . $this->Colorized . "[SAC] > $this->PlayerName, I am watching you ...");
+    }
 
-  public function onPlayerRejoin() : void
-  {
-    $this->Player->sendMessage(TextFormat::ESCAPE.$this->Colorized."[SAC] > $this->PlayerName, I am still watching you ...");
-    $this->Logger->info(TextFormat::ESCAPE.$this->Colorized."[SAC] > $this->PlayerName, I am still watching you ...");
-  }
+    public function onPlayerRejoin() : void
+    {
+        $this->Player->sendMessage(TextFormat::ESCAPE . $this->Colorized . "[SAC] > $this->PlayerName, I am still watching you ...");
+        $this->Logger->info(TextFormat::ESCAPE . $this->Colorized . "[SAC] > $this->PlayerName, I am still watching you ...");
+    }
 
-  public function onPlayerQuit() : void
-  {
-    $this->Logger->info(TextFormat::ESCAPE."$this->Colorized" . "[SAC] > $this->PlayerName is no longer watched...");
-  }
+    public function onPlayerQuit() : void
+    {
+        $this->Logger->info(TextFormat::ESCAPE . "$this->Colorized" . "[SAC] > $this->PlayerName is no longer watched...");
+    }
 
 }
