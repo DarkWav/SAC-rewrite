@@ -67,8 +67,8 @@ class Main extends PluginBase
       {
         if ($ana->PlayerName == $name)
         {
-          $oldhash  = $key;
-          $analyzer = $ana;
+          $oldhash          = $key;
+          $analyzer         = $ana;
           $analyzer->Player = $player;
         }
       }
@@ -81,8 +81,8 @@ class Main extends PluginBase
       else
       {
         $observer = new Analyzer($player, $this);
-        $this->Analyzer[$hash] = $analyzer;
-        $this->Analyzer[$hash]->onPlayerJoin();
+        $this->Analyzers[$hash] = $analyzer;
+        $this->Analyzers[$hash]->onPlayerJoin();
       }
     }
   }
