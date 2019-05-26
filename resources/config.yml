@@ -7,7 +7,7 @@
 #########################################
 #     Metadata of config file           #
 #     DO NOT EDIT!                      #
-plugin_version: "4.0.2"                 #
+plugin_version: "4.0.3"                 #
 #########################################
 # Welcome to ShadowAntiCheat Configuration!
 # Your can change some aspects about how the plugin works,
@@ -21,3 +21,24 @@ plugin_version: "4.0.2"                 #
 # Pocketmine Forums (contact "Darku"): https://forums.pmmp.io/conversations/add
 #
 # Without further redo, let's get started!
+#
+# What color should SAC use in chat and console?
+# Supported colors:
+# 0 = BLACK
+# 1 = DARK_BLUE
+# 2 = DARK_GREEN
+# 3 = DARK_AQUA
+# 4 = DARK_RED
+# 5 = DARK_PURPLE
+# 6 = GOLD
+# 7 = GRAY
+# 8 = DARK_GRAY
+# 9 = BLUE
+# a = GREEN
+# b = AQUA
+# c = RED
+# d = LIGHT_PURPLE
+# e = YELLOW
+# f = WHITE
+
+Color: 3

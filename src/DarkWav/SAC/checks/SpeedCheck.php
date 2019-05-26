@@ -10,6 +10,7 @@ namespace DarkWav\SAC\checks;
 
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
+use pocketmine\event\Cancellable;
 
 use DarkWav\SAC\Main;
 use DarkWav\SAC\KickTask;
@@ -22,10 +23,12 @@ class SpeedCheck
   {
     $this->Analyzer   = $ana;
   }
-  public function run() : void
+  public function run($event) : void
   {
     $name = $this->Analyzer->PlayerName;
     $this->Analyzer->Player->sendMessage(TextFormat::ESCAPE.$this->Analyzer->Colorized."[SAC] > $name, you are being checked for Speed!");
+    $event->setCancelled(true);
+    $this->Analyzer->kickPlayer("[SAC] > Test Kick Message!");
     #TODO
   }
 }

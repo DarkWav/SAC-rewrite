@@ -87,7 +87,7 @@ class EventListener implements Listener
     {
       if($plr != null and $this->Main->Analyzers[$hash]->Player != null)
       {
-        $this->Main->Analyzers[$hash]->onPlayerMove($event);
+        $this->Main->Analyzers[$hash]->onPlayerMoveEvent($event);
       }
     }
   }

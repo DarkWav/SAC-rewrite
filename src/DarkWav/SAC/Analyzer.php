@@ -70,7 +70,7 @@ class Analyzer
     $this->PlayerName = $this->Player->getName();
     $this->Server     = $this->Main->server;
     $this->Logger     = $this->Main->logger;
-    $this->Colorized  = "3";
+    $this->Colorized  = $this->Main->Colorized;
 
     #initialize checks
 
@@ -109,17 +109,24 @@ class Analyzer
     $this->Logger->info(TextFormat::ESCAPE."$this->Colorized" . "[SAC] > $this->PlayerName is no longer watched...");
   }
 
-  public function onPlayerMove($event) : void
+  public function onPlayerMoveEvent($event) : void
   {
     #process event first
     $this->processPlayerMoveEvent($event);
     #then run checks
-    $this->SpeedCheck->run();
+    $this->SpeedCheck->run($event);
   }
 
   public function processPlayerMoveEvent($event) : void
   {
     #TODO
+  }
+
+  #util functions
+
+  public function kickPlayer($message) : void
+  {
+    $this->Main->getScheduler()->scheduleDelayedTask(new KickTask($this->Main, $this->Player, $message), 1);
   }
 
 }

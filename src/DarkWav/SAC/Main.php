@@ -18,16 +18,18 @@ use pocketmine\utils\Config;
 
 use DarkWav\SAC\EventListener;
 use DarkWav\SAC\Analyzer;
+use DarkWav\SAC\KickTask;
 
 class Main extends PluginBase
 {
   #global variables
-  public $cl;
-  public $version = "4.0.2";
+  public $Colorized;
+  public $version = "4.0.3";
   public $logger;
   public $server;
-  public $config;
+  public $Config;
   public $Analyzers = array();
+
   public function onEnable() : void
   {
     $this->logger = $this->getServer()->getLogger();
@@ -35,17 +37,15 @@ class Main extends PluginBase
     $this->server->getPluginManager()->registerEvents(new EventListener($this), $this);
     @mkdir($this->getDataFolder()); #create folder for config files, ect
     $this->saveDefaultConfig();
-    $this->config = $this->getConfig();
-    $this->cl = "3"; #set color for output messages to dark aqua
+    $this->Config = $this->getConfig();
+    $this->Colorized = $this->Config->get("Color"); #set color for output messages
     $this->logger->info("[SAC] > ShadowAntiCheat enabled");
 
     #config integrity check
 
-    switch($this->config->get("plugin_version")) #check if the config file is compatible with the current version of the plugin.
+    switch($this->Config->get("plugin_version")) #check if the config file is compatible with the current version of the plugin.
     {
       case $this->version: break;
-      case "4.0.0":  break;
-      case "4.0.1":  break;
       default:
       {
         $this->logger->error(TextFormat::RED . "[SAC] > Your configuration file is incompatible with this version of SAC, please delete ./plugin_data/ShadowAntiCheat/config.yml"); #throw error and nofify user about incompatible config
@@ -95,12 +95,12 @@ class Main extends PluginBase
     {
       case "sac":
       {
-        $sender->sendMessage(TextFormat::ESCAPE."$this->cl"."[SAC] > ShadowAntiCheat v".$this->version." [Comet] by DarkWav");
+        $sender->sendMessage(TextFormat::ESCAPE."$this->Colorized"."[SAC] > ShadowAntiCheat v".$this->version." [Comet] by DarkWav");
         break;
       }
       case "shadowanticheat":
       {
-        $sender->sendMessage(TextFormat::ESCAPE."$this->cl"."[SAC] > ShadowAntiCheat v".$this->version." [Comet] by DarkWav");
+        $sender->sendMessage(TextFormat::ESCAPE."$this->Colorized"."[SAC] > ShadowAntiCheat v".$this->version." [Comet] by DarkWav");
         break;
       }
       default:
