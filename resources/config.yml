@@ -7,7 +7,7 @@
 #########################################
 #     Metadata of config file           #
 #     DO NOT EDIT!                      #
-plugin_version: "4.0.3"                 #
+plugin_version: "4.0.4"                 #
 #########################################
 # Welcome to ShadowAntiCheat Configuration!
 # Your can change some aspects about how the plugin works,
@@ -42,3 +42,11 @@ plugin_version: "4.0.3"                 #
 # f = WHITE
 
 Color: 3
+
+# === Speed Check === #
+#
+# How many blocks per second may a player run to be considered legit?
+# Default: 8.0.
+# Increase this if you get Speed false positives.
+
+MaxSpeed: 8.0

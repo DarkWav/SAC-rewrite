@@ -10,6 +10,7 @@ namespace DarkWav\SAC;
 
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
+use pocketmine\math\Vector3;
 
 use DarkWav\SAC\Main;
 use DarkWav\SAC\KickTask;
@@ -60,6 +61,27 @@ class Analyzer
   public $SpiderCheck;
   public $VClipCheck;
 
+  #data
+
+  public $FromXZPos;
+  public $ToXZPos;
+  public $XZDistance;
+  public $PreviousTick;
+  public $XZTimeRingBuffer;
+  public $XZDistanceRingBuffer;
+  public $YTimeRingBuffer;
+  public $YDistanceRingBuffer;
+  public $XZRingBufferSize;
+  public $YRingBufferSize;
+  public $XZRingBufferIndex;
+  public $YRingBufferIndex;
+  public $XZTimeSum;
+  public $XZDistanceSum;
+  public $YTimeSum;
+  public $YDistanceSum;
+  public $XZSpeed;
+  public $YSpeed;
+
   public function __construct($plr, Main $sac)
   {
 
@@ -90,6 +112,32 @@ class Analyzer
     $this->SpiderCheck      = new SpiderCheck($this);
     $this->VClipCheck       = new VClipCheck($this);
 
+    #initialize data variables
+
+    #processPlayerMoveEvent() data
+
+    $this->FromXZPos            = new Vector3(0.0, 0.0, 0.0);
+    $this->ToXZPos              = new Vector3(0.0, 0.0, 0.0);
+    $this->FromYPos             = new Vector3(0.0, 0.0, 0.0);
+    $this->ToYPos               = new Vector3(0.0, 0.0, 0.0);
+    $this->XZDistance           = 0.0;
+    $this->YDistance            = 0.0;
+    $this->PreviousTick         = -1.0;
+    $this->XZRingBufferSize     = 8;
+    $this->YRingBufferSize      = 8;
+    $this->XZRingBufferIndex    = 0;
+    $this->YRingBufferIndex     = 0;
+    $this->XZTimeRingBuffer     = array_fill(0, $this->XZRingBufferSize, 0.0);
+    $this->XZDistanceRingBuffer = array_fill(0, $this->XZRingBufferSize, 0.0);
+    $this->YTimeRingBuffer      = array_fill(0, $this->YRingBufferSize , 0.0);
+    $this->YDistanceRingBuffer  = array_fill(0, $this->YRingBufferSize , 0.0);
+    $this->XZTimeSum            = 0.0;
+    $this->XZDistanceSum        = 0.0;
+    $this->YTimeSum             = 0.0;
+    $this->YDistanceSum         = 0.0;
+    $this->XZSpeed              = 0.0;
+    $this->YSpeed               = 0.0;
+
   }
 
   public function onPlayerJoin() : void
@@ -119,7 +167,61 @@ class Analyzer
 
   public function processPlayerMoveEvent($event) : void
   {
-    #TODO
+    #calculate distance travelled in the event itself in XZ and Y axis.
+    $this->FromXZPos    = new Vector3($event->getFrom()->getX(), 0.0, $event->getFrom()->getZ());
+    $this->ToXZPos      = new Vector3($event->getTo()->getX()  , 0.0, $event->getTo()->getZ()  );
+    $this->XZDistance   = $this->FromXZPos->distance($this->ToXZPos);
+    $this->FromYPos     = new Vector3(0.0, $event->getFrom()->getY(), 0.0);
+    $this->ToYPos       = new Vector3(0.0, $event->getTo()->getY()  , 0.0);
+    $this->YDistance    = $this->FromYPos->distance($this->ToYPos);
+
+    $Tick               = (double)$this->Server->getTick();
+    $TPS                = (double)$this->Server->getTicksPerSecond();
+    $TickCount          = (double)($Tick - $this->PreviousTick);
+    $TimeDiff           = (double)($TickCount) / (double)$TPS;
+    if ($TPS > 0.0 and $this->PreviousTick != -1.0)
+    {
+      if($TimeDiff < 2.0) #if move events are divided too far apart each other, ignore the move
+      {
+        #write distances and times into a a ringbuffer
+        $this->XZTimeSum                                      = $this->XZTimeSum     - $this->XZTimeRingBuffer    [$this->XZRingBufferIndex] + $TimeDiff; #ringbuffer time sum (remove oldest, add new)
+        $this->XZDistanceSum                                  = $this->XZDistanceSum - $this->XZDistanceRingBuffer[$this->XZRingBufferIndex] + $this->XZDistance; #ringbuffer distance sum (remove oldest, add new) 
+        $this->XZTimeRingBuffer    [$this->XZRingBufferIndex] = $TimeDiff; #overwrite oldest delta_t  with the new one
+        $this->XZDistanceRingBuffer[$this->XZRingBufferIndex] = $this->XZDistance; #overwrite oldest distance with the new one          
+        $this->XZRingBufferIndex++; #Update ringbuffer position
+        if ($this->XZRingBufferIndex >= $this->XZRingBufferSize)
+        {
+          $this->XZRingBufferIndex = 0; #make ringbuffer index reset once its at the end of the ringbuffer
+        }
+        $this->YTimeSum                                      = $this->YTimeSum     - $this->YTimeRingBuffer    [$this->YRingBufferIndex] + $TimeDiff; #ringbuffer time sum (remove oldest, add new)
+        $this->YDistanceSum                                  = $this->YDistanceSum - $this->YDistanceRingBuffer[$this->YRingBufferIndex] + $this->YDistance; #ringbuffer distance sum (remove oldest, add new) 
+        $this->YTimeRingBuffer    [$this->YRingBufferIndex]  = $TimeDiff; #overwrite oldest delta_t  with the new one
+        $this->YDistanceRingBuffer[$this->YRingBufferIndex]  = $this->YDistance; #overwrite oldest distance with the new one          
+        $this->YRingBufferIndex++; #Update ringbuffer position
+        if ($this->YRingBufferIndex >= $this->YRingBufferSize)
+        {
+          $this->YRingBufferIndex = 0; #make ringbuffer index reset once its at the end of the ringbuffer
+        }
+      }
+      #calculate actual average movement speed
+      if ($this->XZTimeSum > 0)
+      {
+        $this->XZSpeed = (double)$this->XZDistanceSum / (double)$this->XZTimeSum; #speed = distance / time difference:
+      }
+      else
+      {
+        $this->XZSpeed = 0.0;
+      }
+      if ($this->YTimeSum > 0)
+      {
+        $this->YSpeed = (double)$this->YDistanceSum  / (double)$this->YTimeSum; #speed = distance / time difference:
+      }
+      else
+      {
+        $this->YSpeed = 0.0;
+      }
+    }
+    $this->PreviousTick = $Tick;
   }
 
   #util functions

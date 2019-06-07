@@ -19,16 +19,23 @@ use DarkWav\SAC\Analyzer;
 class SpeedCheck
 {
   public $Analyzer;
+  public $MaxSpeed;
   public function __construct(Analyzer $ana)
   {
     $this->Analyzer   = $ana;
+    $this->MaxSpeed   = $this->Analyzer->Main->Config->get("MaxSpeed");
   }
   public function run($event) : void
   {
     $name = $this->Analyzer->PlayerName;
-    $this->Analyzer->Player->sendMessage(TextFormat::ESCAPE.$this->Analyzer->Colorized."[SAC] > $name, you are being checked for Speed!");
-    $event->setCancelled(true);
-    $this->Analyzer->kickPlayer("[SAC] > Test Kick Message!");
+    $speed = $this->Analyzer->XZSpeed;
+    #$this->Analyzer->Player->sendMessage(TextFormat::ESCAPE.$this->Analyzer->Colorized."[SAC] > $name, you are being checked for Speed!");
+    $this->Analyzer->Logger->info(TextFormat::ESCAPE.$this->Analyzer->Colorized."[SAC] > $name is running at $speed blocks per second!");
+    if($speed > $this->MaxSpeed)
+    {
+      $event->setCancelled(true);
+      $this->Analyzer->kickPlayer("[SAC] > Speed!");
+    }
     #TODO
   }
 }
