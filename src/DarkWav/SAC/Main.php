@@ -24,7 +24,7 @@ class Main extends PluginBase
 {
   #global variables
   public $Colorized;
-  public $version = "4.0.4";
+  public $version = "4.0.5";
   public $logger;
   public $server;
   public $Config;
@@ -80,7 +80,7 @@ class Main extends PluginBase
       }
       else
       {
-        $observer = new Analyzer($player, $this);
+        $analyzer = new Analyzer($player, $this);
         $this->Analyzers[$hash] = $analyzer;
         $this->Analyzers[$hash]->onPlayerJoin();
       }
