@@ -181,6 +181,7 @@ class Analyzer
     $this->AngleCheck->run($event);
     $this->AutoClickerCheck->run($event);
     $this->CriticalsCheck->run($event);
+    $this->ReachCheck->run($event);
     #run heuristics
     $this->CombatHeuristics->run($event);
   }
