@@ -24,7 +24,7 @@ class Main extends PluginBase
 {
   #global variables
   public $Colorized;
-  public $version = "4.0.5";
+  public $version = "4.0.6";
   public $logger;
   public $server;
   public $Config;
@@ -95,12 +95,12 @@ class Main extends PluginBase
     {
       case "sac":
       {
-        $sender->sendMessage(TextFormat::ESCAPE."$this->Colorized"."[SAC] > ShadowAntiCheat v".$this->version." [Comet] by DarkWav");
+        $sender->sendMessage(TextFormat::ESCAPE."$this->Colorized"."[SAC] > ShadowAntiCheat v".$this->version." [Dizzy Devil] by DarkWav");
         break;
       }
       case "shadowanticheat":
       {
-        $sender->sendMessage(TextFormat::ESCAPE."$this->Colorized"."[SAC] > ShadowAntiCheat v".$this->version." [Comet] by DarkWav");
+        $sender->sendMessage(TextFormat::ESCAPE."$this->Colorized"."[SAC] > ShadowAntiCheat v".$this->version." [Dizzy Devil] by DarkWav");
         break;
       }
       default:

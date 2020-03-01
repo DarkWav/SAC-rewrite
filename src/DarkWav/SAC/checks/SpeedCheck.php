@@ -33,10 +33,12 @@ class SpeedCheck
   {
     if ($this->Analyzer->Player->getAllowFlight()) return;
     if (!$this->Analyzer->Main->Config->get("Speed")) return;
+    if ($this->Analyzer->Player->getGamemode() == Player::CREATIVE) return;
+    if ($this->Analyzer->Player->getGamemode() == Player::SPECTATOR) return;
     $name = $this->Analyzer->PlayerName;
     $speed = $this->Analyzer->XZSpeed;
     #$this->Analyzer->Player->sendMessage(TextFormat::ESCAPE.$this->Analyzer->Colorized."[SAC] > $name, you are being checked for Speed!");
-    $this->Analyzer->Logger->info(TextFormat::ESCAPE.$this->Analyzer->Colorized."[SAC] > $name is running at $speed blocks per second!");
+    $this->Analyzer->Logger->debug(TextFormat::ESCAPE.$this->Analyzer->Colorized."[SAC] > $name is running at $speed blocks per second!");
 
     if($speed > $this->MaxSpeed)
     {

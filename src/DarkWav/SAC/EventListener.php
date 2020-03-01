@@ -14,6 +14,9 @@ use pocketmine\event\Listener;
 use pocketmine\event\Cancellable;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
+use pocketmine\event\entity\EntityDamageEvent;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
+use pocketmine\Player;
 use DarkWav\SAC\Main;
 use DarkWav\SAC\Analyzer;
 
@@ -88,6 +91,31 @@ class EventListener implements Listener
       if($plr != null and $this->Main->Analyzers[$hash]->Player != null)
       {
         $this->Main->Analyzers[$hash]->onPlayerMoveEvent($event);
+      }
+    }
+  }
+  
+  public function onDamage(EntityDamageEvent $event)
+  {
+    $entity       = $event->getEntity();
+    $entityHash   = spl_object_hash($entity);
+    if (array_key_exists($hash , $this->Main->Analyzers))
+    {
+      if($entity instanceof Player and $entity != null and $this->Main->Analyzers[$entityHash]->Player != null)
+      {
+        $this->Main->Analyzers[$entityHash]->onPlayerGetsHit($event);
+      }
+    }
+    if($event instanceof EntityDamageByEntityEvent)
+    {
+      $damager      =  $event->getDamager();
+      $damagerHash  = spl_object_hash($entity);
+      if($damager instanceof Player and $damager != null and $this->Main->Analyzers[$damagerHash]->Player != null)
+      {
+        if ($event->getCause() == EntityDamageEvent::CAUSE_ENTITY_ATTACK)
+        {
+          $this->Main->Analyzers[$damagerHash]->onPlayerPerformsHit($event);
+        }
       }
     }
   }

@@ -140,6 +140,9 @@ class Analyzer
 
   }
 
+  # Event handlers
+  # these will work with events redirected from EventListener
+  
   public function onPlayerJoin() : void
   {
     $this->Player->sendMessage(TextFormat::ESCAPE.$this->Colorized."[SAC] > $this->PlayerName, I am watching you ...");
@@ -164,7 +167,27 @@ class Analyzer
     #then run checks
     $this->SpeedCheck->run($event);
   }
+  
+  public function onPlayerGetsHit($event): void
+  {
+  
+  }
 
+  public function onPlayerPerformsHit($event): void
+  {
+    #process data
+    $this->processPlayerPerformsHit($event);
+    #run regular checks
+    $this->AngleCheck->run($event);
+    $this->AutoClickerCheck->run($event);
+    $this->CriticalsCheck->run($event);
+    #run heuristics
+    $this->CombatHeuristics->run($event);
+  }
+
+  # processing functions
+  # these will process data retrieved from events
+  
   public function processPlayerMoveEvent($event) : void
   {
     #calculate distance travelled in the event itself in XZ and Y axis.
@@ -224,6 +247,10 @@ class Analyzer
     $this->PreviousTick = $Tick;
   }
 
+  public function processPlayerPerformsHit($event) : void
+  {
+  }
+  
   #util functions
 
   public function kickPlayer($message) : void
