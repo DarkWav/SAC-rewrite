@@ -14,7 +14,7 @@
 - NoClip (not started)
 - Reach (not started)
 - Regen (not started)
-- Speed (in progress, 80% complete)
+- Speed <b>(in progress, 80% complete)<b>
 - Spider (not started)
 - VClip (not started)
 
