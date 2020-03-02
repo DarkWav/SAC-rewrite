@@ -2,6 +2,12 @@
 declare(strict_types=1);
 namespace DarkWav\SAC;
 
+/*
+ *  ShadowAntiCheat by DarkWav.
+ *  Distributed under the MIT License.
+ *  Copyright (C) 2016-2020 DarkWav and others.
+ */
+
 use pocketmine\utils\TextFormat;
 use pocketmine\command\ConsoleCommandSender;
 use pocketmine\plugin\Plugin;

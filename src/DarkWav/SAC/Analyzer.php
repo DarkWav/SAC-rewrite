@@ -5,7 +5,7 @@ namespace DarkWav\SAC;
 /*
  *  ShadowAntiCheat by DarkWav.
  *  Distributed under the MIT License.
- *  Copyright (C) 2016-2019 DarkWav
+ *  Copyright (C) 2016-2020 DarkWav and others.
  */
 
 use pocketmine\Player;
@@ -63,6 +63,21 @@ class Analyzer
 
   #data
 
+  public $isPvp;
+  public $damagedEntityPosition;
+  public $damagedEntityPositionXZ;
+  public $playerPosition;
+  public $playerPositionXZ;
+  public $playerFacingDirection;
+  public $playerFacingDirectionXZ;
+  public $directionToTarget;
+  public $directionToTargetXZ;
+  public $hitDistance;
+  public $hitDistanceXZ;
+  public $directionDotProduct;
+  public $directionDotProductXZ;
+  public $hitAngle;
+  public $hitAngleXZ;
   public $FromXZPos;
   public $ToXZPos;
   public $XZDistance;
@@ -114,30 +129,47 @@ class Analyzer
 
     #initialize data variables
 
+    #processPlayerPerformsHit() data
+
+    $this->isPvp                   = false;
+    $this->damagedEntityPosition   = new Vector3(0.0, 0.0, 0.0);
+    $this->damagedEntityPositionXZ = new Vector3(0.0, 0.0, 0.0);
+    $this->playerPosition          = new Vector3(0.0, 0.0, 0.0);
+    $this->playerPositionXZ        = new Vector3(0.0, 0.0, 0.0);
+    $this->playerFacingDirection   = new Vector3(0.0, 0.0, 0.0);
+    $this->playerFacingDirectionXZ = new Vector3(0.0, 0.0, 0.0);
+    $this->directionToTarget       = new Vector3(0.0, 0.0, 0.0);
+    $this->directionToTargetXZ     = new Vector3(0.0, 0.0, 0.0);
+    $this->hitDistance             = new Vector3(0.0, 0.0, 0.0); #Reach Distance
+    $this->hitDistanceXZ           = new Vector3(0.0, 0.0, 0.0); #Reach Distance (only X and Z axis)
+    $this->directionDotProduct     = 0;
+    $this->directionDotProductXZ   = 0;
+    $this->hitAngle                = 0; #Hit Angle
+    $this->hitAngleXZ              = 0; #Hit Angle (only X and Z axis)
+    
     #processPlayerMoveEvent() data
-
-    $this->FromXZPos            = new Vector3(0.0, 0.0, 0.0);
-    $this->ToXZPos              = new Vector3(0.0, 0.0, 0.0);
-    $this->FromYPos             = new Vector3(0.0, 0.0, 0.0);
-    $this->ToYPos               = new Vector3(0.0, 0.0, 0.0);
-    $this->XZDistance           = 0.0;
-    $this->YDistance            = 0.0;
-    $this->PreviousTick         = -1.0;
-    $this->XZRingBufferSize     = 8;
-    $this->YRingBufferSize      = 8;
-    $this->XZRingBufferIndex    = 0;
-    $this->YRingBufferIndex     = 0;
-    $this->XZTimeRingBuffer     = array_fill(0, $this->XZRingBufferSize, 0.0);
-    $this->XZDistanceRingBuffer = array_fill(0, $this->XZRingBufferSize, 0.0);
-    $this->YTimeRingBuffer      = array_fill(0, $this->YRingBufferSize , 0.0);
-    $this->YDistanceRingBuffer  = array_fill(0, $this->YRingBufferSize , 0.0);
-    $this->XZTimeSum            = 0.0;
-    $this->XZDistanceSum        = 0.0;
-    $this->YTimeSum             = 0.0;
-    $this->YDistanceSum         = 0.0;
-    $this->XZSpeed              = 0.0;
-    $this->YSpeed               = 0.0;
-
+    
+    $this->FromXZPos               = new Vector3(0.0, 0.0, 0.0);
+    $this->ToXZPos                 = new Vector3(0.0, 0.0, 0.0);
+    $this->FromYPos                = new Vector3(0.0, 0.0, 0.0);
+    $this->ToYPos                  = new Vector3(0.0, 0.0, 0.0);
+    $this->XZDistance              = 0.0;
+    $this->YDistance               = 0.0;
+    $this->PreviousTick            = -1.0;
+    $this->XZRingBufferSize        = 8;
+    $this->YRingBufferSize         = 8;
+    $this->XZRingBufferIndex       = 0;
+    $this->YRingBufferIndex        = 0;
+    $this->XZTimeRingBuffer        = array_fill(0, $this->XZRingBufferSize, 0.0);
+    $this->XZDistanceRingBuffer    = array_fill(0, $this->XZRingBufferSize, 0.0);
+    $this->YTimeRingBuffer         = array_fill(0, $this->YRingBufferSize , 0.0);
+    $this->YDistanceRingBuffer     = array_fill(0, $this->YRingBufferSize , 0.0);
+    $this->XZTimeSum               = 0.0;
+    $this->XZDistanceSum           = 0.0;
+    $this->YTimeSum                = 0.0;
+    $this->YDistanceSum            = 0.0;
+    $this->XZSpeed                 = 0.0;
+    $this->YSpeed                  = 0.0;
   }
 
   # Event handlers
@@ -181,6 +213,7 @@ class Analyzer
     $this->AngleCheck->run($event);
     $this->AutoClickerCheck->run($event);
     $this->CriticalsCheck->run($event);
+    $this->ReachCheck->run($event);
     #run heuristics
     $this->CombatHeuristics->run($event);
   }
@@ -249,6 +282,32 @@ class Analyzer
 
   public function processPlayerPerformsHit($event) : void
   {
+    $damagedEntity = $event->getEntity();
+    if ($damagedEntity instanceof Player)
+    {
+      $this->isPvp = true;
+    }
+    else
+    {
+      $this->isPvp = false;
+    }
+    $this->damagedEntityPosition      = new Vector3($damagedEntity->getX(), $damagedEntity->getY(), $damagedEntity->getZ());
+    $this->damagedEntityPositionXZ    = new Vector3($damagedEntity->getX(), 0                     , $damagedEntity->getZ());
+    $this->playerPosition             = new Vector3($this->Player->getX() , $this->Player->getY() , $this->Player->getZ() );
+    $this->playerPositionXZ           = new Vector3($this->Player->getX() , 0                     , $this->Player->getZ() );
+    $this->playerFacingDirection      = $this->Player->getDirectionVector()->normalize();
+    $this->playerFacingDirectionXZ    = $this->Player->getDirectionVector();
+    $this->playerFacingDirectionXZ->y = 0;
+    $this->playerFacingDirectionXZ    = $this->playerFacingDirectionXZ->normalize();
+    $this->directionToTarget          = $this->damagedEntityPosition->subsract($this->playerPosition)->normalize();
+    $this->directionToTargetXZ;       = $this->damagedEntityPositionXZ->subsract($this->playerPositionXZ)->normalize();
+    $this->hitDistance                = $this->playerPosition->distance($this->damagedEntityPosition);
+    $this->hitDistanceXZ              = $this->playerPositionXZ->distance($this->damagedEntityPositionXZ);
+    #here comes the maths bois!
+    $this->directionDotProduct        = $this->playerPosition->dot($this->damagedEntityPosition);
+    $this->directionDotProductXZ      = $this->playerPositionXZ->dot($this->damagedEntityPositionXZ);
+    $this->hitAngle                   = rad2deg(acos($this->directionDotProduct));
+    $this->hitAngleXZ                 = rad2deg(acos($this->directionDotProductXZ));
   }
   
   #util functions

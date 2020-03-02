@@ -5,7 +5,7 @@ namespace DarkWav\SAC;
 /*
  *  ShadowAntiCheat by DarkWav.
  *  Distributed under the MIT License.
- *  Copyright (C) 2016-2019 DarkWav
+ *  Copyright (C) 2016-2020 DarkWav and others.
  */
 
 # imports
@@ -24,7 +24,8 @@ class Main extends PluginBase
 {
   #global variables
   public $Colorized;
-  public $version = "4.0.6";
+  public $version = "4.0.7";
+  public $config_version = "1.0.0";
   public $logger;
   public $server;
   public $Config;
@@ -43,6 +44,15 @@ class Main extends PluginBase
 
     #config integrity check
 
+    switch($this->Config->get("config_version")) #check if the config is up to date.
+    {
+      case $this->config_version: break;
+      default:
+      {
+        $this->logger->warning(TextFormat::YELLOW . "[SAC] > Your configuration file is outdated, please update when possible"); #nofify user about outdated config
+        break;
+      }
+    }
     switch($this->Config->get("plugin_version")) #check if the config file is compatible with the current version of the plugin.
     {
       case $this->version: break;

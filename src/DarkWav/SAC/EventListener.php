@@ -5,7 +5,7 @@ namespace DarkWav\SAC;
 /*
  *  ShadowAntiCheat by DarkWav.
  *  Distributed under the MIT License.
- *  Copyright (C) 2016-2019 DarkWav
+ *  Copyright (C) 2016-2020 DarkWav and others.
  */
 
 #basic imports

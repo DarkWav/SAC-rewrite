@@ -1,14 +1,15 @@
-#########################################
-#  ShadowAntiCheat by DarkWav.          #
-#  Distributed under the MIT License.   #
-#  Copyright (C) 2016-2019 DarkWav      #
-#########################################
-#     ShadowAntiCheat Configuration     #
-#########################################
-#     Metadata of config file           #
-#     DO NOT EDIT!                      #
-plugin_version: "4.0.6"                 #
-#########################################
+################################################
+#  ShadowAntiCheat by DarkWav.                 #
+#  Distributed under the MIT License.          #
+#  Copyright (C) 2016-2019 DarkWav and others. #
+################################################
+#     ShadowAntiCheat Configuration            #
+################################################
+#     Metadata of config file                  #
+#     DO NOT EDIT!                             #
+config_version: "1.0.0"                        #
+plugin_version: "4.0.7"                        #
+################################################
 # Welcome to ShadowAntiCheat Configuration!
 # Your can change some aspects about how the plugin works,
 # how strict or lenient its checks are, enable checks, disable checks
