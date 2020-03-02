@@ -14,24 +14,7 @@ use pocketmine\math\Vector3;
 
 use DarkWav\SAC\Main;
 use DarkWav\SAC\KickTask;
-
-#import checks
-
-use DarkWav\SAC\checks\AngleCheck;
-use DarkWav\SAC\checks\AutoClickerCheck;
-use DarkWav\SAC\checks\CombatHeuristics;
-use DarkWav\SAC\checks\CriticalsCheck;
-use DarkWav\SAC\checks\FastBowCheck;
-use DarkWav\SAC\checks\FastBreakCheck;
-use DarkWav\SAC\checks\FastPlaceCheck;
-use DarkWav\SAC\checks\FlyCheck;
-use DarkWav\SAC\checks\GlideCheck;
-use DarkWav\SAC\checks\NoClipCheck;
-use DarkWav\SAC\checks\ReachCheck;
-use DarkWav\SAC\checks\RegenCheck;
-use DarkWav\SAC\checks\SpeedCheck;
-use DarkWav\SAC\checks\SpiderCheck;
-use DarkWav\SAC\checks\VClipCheck;
+use DarkWav\SAC\CheckRegister;
 
 class Analyzer
 {
@@ -42,24 +25,7 @@ class Analyzer
   public $Server;
   public $Logger;
   public $Colorized;
-
-  #checks
-
-  public $AngleCheck;
-  public $AutoClickerCheck;
-  public $CombatHeuristics;
-  public $CriticalsCheck;
-  public $FastBowCheck;
-  public $FastBreakCheck;
-  public $FastPlaceCheck;
-  public $FlyCheck;
-  public $GlideCheck;
-  public $NoClipCheck;
-  public $ReachCheck;
-  public $RegenCheck;
-  public $SpeedCheck;
-  public $SpiderCheck;
-  public $VClipCheck;
+  public $CheckRegister;
 
   #data
 
@@ -102,31 +68,14 @@ class Analyzer
 
     #initialize basic variables
 
-    $this->Main       = $sac;
-    $this->Player     = $plr;
-    $this->PlayerName = $this->Player->getName();
-    $this->Server     = $this->Main->server;
-    $this->Logger     = $this->Main->logger;
-    $this->Colorized  = $this->Main->Colorized;
-
-    #initialize checks
-
-    $this->AngleCheck       = new AngleCheck($this);
-    $this->AutoClickerCheck = new AutoClickerCheck($this);
-    $this->CombatHeuristics = new CombatHeuristics($this);
-    $this->CriticalsCheck   = new CriticalsCheck($this);
-    $this->FastBowCheck     = new FastBowCheck($this);
-    $this->FastBreakCheck   = new FastBreakCheck($this);
-    $this->FastPlaceCheck   = new FastPlaceCheck($this);
-    $this->FlyCheck         = new FlyCheck($this);
-    $this->GlideCheck       = new GlideCheck($this);
-    $this->NoClipCheck      = new NoClipCheck($this);
-    $this->ReachCheck       = new ReachCheck($this);
-    $this->RegenCheck       = new RegenCheck($this);
-    $this->SpeedCheck       = new SpeedCheck($this);
-    $this->SpiderCheck      = new SpiderCheck($this);
-    $this->VClipCheck       = new VClipCheck($this);
-
+    $this->Main              = $sac;
+    $this->Player            = $plr;
+    $this->PlayerName        = $this->Player->getName();
+    $this->Server            = $this->Main->server;
+    $this->Logger            = $this->Main->logger;
+    $this->Colorized         = $this->Main->Colorized;
+    $this->CheckRegister     = new CheckRegister($this);
+    
     #initialize data variables
 
     #processPlayerPerformsHit() data
@@ -197,7 +146,7 @@ class Analyzer
     #process event first
     $this->processPlayerMoveEvent($event);
     #then run checks
-    $this->SpeedCheck->run($event);
+    $this->CheckRegister->runChecksOnPlayerMoveEvent($event);
   }
   
   public function onPlayerGetsHit($event): void
@@ -209,13 +158,8 @@ class Analyzer
   {
     #process data
     $this->processPlayerPerformsHit($event);
-    #run regular checks
-    $this->AngleCheck->run($event);
-    $this->AutoClickerCheck->run($event);
-    $this->CriticalsCheck->run($event);
-    $this->ReachCheck->run($event);
-    #run heuristics
-    $this->CombatHeuristics->run($event);
+    #then run checks
+    $this->CheckRegister->runChecksOnPlayerPerformsHit($event);
   }
 
   # processing functions
@@ -300,7 +244,7 @@ class Analyzer
     $this->playerFacingDirectionXZ->y = 0;
     $this->playerFacingDirectionXZ    = $this->playerFacingDirectionXZ->normalize();
     $this->directionToTarget          = $this->damagedEntityPosition->subsract($this->playerPosition)->normalize();
-    $this->directionToTargetXZ;       = $this->damagedEntityPositionXZ->subsract($this->playerPositionXZ)->normalize();
+    $this->directionToTargetXZ        = $this->damagedEntityPositionXZ->subsract($this->playerPositionXZ)->normalize();
     $this->hitDistance                = $this->playerPosition->distance($this->damagedEntityPosition);
     $this->hitDistanceXZ              = $this->playerPositionXZ->distance($this->damagedEntityPositionXZ);
     #here comes the maths bois!

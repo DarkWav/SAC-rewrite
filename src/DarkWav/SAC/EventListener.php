@@ -99,7 +99,7 @@ class EventListener implements Listener
   {
     $entity       = $event->getEntity();
     $entityHash   = spl_object_hash($entity);
-    if (array_key_exists($hash , $this->Main->Analyzers))
+    if (array_key_exists($entityHash , $this->Main->Analyzers))
     {
       if($entity instanceof Player and $entity != null and $this->Main->Analyzers[$entityHash]->Player != null)
       {
@@ -110,11 +110,14 @@ class EventListener implements Listener
     {
       $damager      =  $event->getDamager();
       $damagerHash  = spl_object_hash($entity);
-      if($damager instanceof Player and $damager != null and $this->Main->Analyzers[$damagerHash]->Player != null)
+      if (array_key_exists($damagerHash , $this->Main->Analyzers))
       {
-        if ($event->getCause() == EntityDamageEvent::CAUSE_ENTITY_ATTACK)
+        if($damager instanceof Player and $damager != null and $this->Main->Analyzers[$damagerHash]->Player != null)
         {
-          $this->Main->Analyzers[$damagerHash]->onPlayerPerformsHit($event);
+          if ($event->getCause() == EntityDamageEvent::CAUSE_ENTITY_ATTACK)
+          {
+            $this->Main->Analyzers[$damagerHash]->onPlayerPerformsHit($event);
+          }
         }
       }
     }
