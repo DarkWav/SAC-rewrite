@@ -66,26 +66,10 @@ class Main extends PluginBase
         #connect existing players with an analyzer instance
 
         foreach ($this->server->getOnlinePlayers() as $player) {
-            $hash = spl_object_hash($player);
-            $name = $player->getName();
-            $oldhash = null;
-            $analyzer = null;
-            foreach ($this->Analyzers as $key => $ana) {
-                if ($ana->PlayerName == $name) {
-                    $oldhash = $key;
-                    $analyzer = $ana;
-                    $analyzer->Player = $player;
-                }
-            }
-            if ($oldhash != null) {
-                unset($this->Analyzers[$oldhash]);
-                $this->Analyzers[$hash] = $analyzer;
-                $this->Analyzers[$hash]->onPlayerRejoin();
-            } else {
-                $analyzer = new Analyzer($player, $this);
-                $this->Analyzers[$hash] = $analyzer;
-                $this->Analyzers[$hash]->onPlayerJoin();
-            }
+            $uuid = $player->getRawUniqueId(); // raw-uuid for easier handling
+
+            $this->Analyzers[$uuid] = new Analyzer($player, $this);
+            $this->Analyzers[$uuid]->onPlayerRejoin();
         }
     }
 

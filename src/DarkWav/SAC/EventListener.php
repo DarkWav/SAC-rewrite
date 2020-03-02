@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 namespace DarkWav\SAC;
 
 /*
@@ -26,101 +27,66 @@ use pocketmine\event\player\PlayerMoveEvent;
 
 class EventListener implements Listener
 {
-  public $Main;
-  public $Logger;
-  public $Server;
+    public $Main;
+    public $Logger;
+    public $Server;
 
-  public function __construct(Main $mn)
-  {
-    $this->Main   = $mn;
-    $this->Logger = $mn->getServer()->getLogger();
-    $this->Server = $mn->getServer();
-  }
-  
-  public function onJoin(PlayerJoinEvent $event)
-  {
-    $plr      = $event->getPlayer();
-    $hash     = spl_object_hash($plr);
-    $name     = $plr->getName();
-    $oldhash  = null;
-    $analyzer = null;
-    foreach ($this->Main->Analyzers as $key=>$ana)
+    public function __construct(Main $mn)
     {
-      if ($ana->PlayerName == $name)
-      {
-        $oldhash  = $key;
-        $analyzer = $ana;
-        $analyzer->Player = $plr;
-      }
+        $this->Main = $mn;
+        $this->Logger = $mn->getServer()->getLogger();
+        $this->Server = $mn->getServer();
     }
-    if ($oldhash != null)
-    {
-      unset($this->Main->Analyzers[$oldhash]);
-      $this->Main->Analyzers[$hash] = $analyzer;
-      $this->Main->Analyzers[$hash]->onPlayerRejoin();
-    }
-    else
-    {
-      $analyzer = new Analyzer($plr, $this->Main);
-      $this->Main->Analyzers[$hash] = $analyzer;
-      $this->Main->Analyzers[$hash]->onPlayerJoin();
-    }
-  }
 
-  public function onQuit(PlayerQuitEvent $event)
-  {
-    $plr      = $event->getPlayer();
-    $hash     = spl_object_hash($plr);
-    if (!empty($plr) and !empty($hash) and array_key_exists($hash , $this->Main->Analyzers))
+    public function onJoin(PlayerJoinEvent $event)
     {
-      $analyzer = $this->Main->Analyzers[$hash];
-      if (!empty($analyzer))
-      {
-        $analyzer->onPlayerQuit();
-      }
-      $this->Main->Analyzers[$hash]->Player = null;
-    }
-  }
+        $player = $event->getPlayer();
+        $uuid = $player->getRawUniqueId();
 
-  public function onMove(PlayerMoveEvent $event)
-  {
-    $plr      = $event->getPlayer();
-    $hash     = spl_object_hash($plr);
-    if (array_key_exists($hash , $this->Main->Analyzers))
-    {
-      if($plr != null and $this->Main->Analyzers[$hash]->Player != null)
-      {
-        $this->Main->Analyzers[$hash]->onPlayerMoveEvent($event);
-      }
+        $this->Main->Analyzers[$uuid] = new Analyzer($player, $this->Main);
+        $this->Main->Analyzers[$uuid]->onPlayerJoin();
     }
-  }
-  
-  public function onDamage(EntityDamageEvent $event)
-  {
-    $entity       = $event->getEntity();
-    $entityHash   = spl_object_hash($entity);
-    if (array_key_exists($entityHash , $this->Main->Analyzers))
+
+    public function onQuit(PlayerQuitEvent $event)
     {
-      if($entity instanceof Player and $entity != null and $this->Main->Analyzers[$entityHash]->Player != null)
-      {
-        $this->Main->Analyzers[$entityHash]->onPlayerGetsHit($event);
-      }
+        $player = $event->getPlayer();
+        $uuid = $player->getRawUniqueId();
+
+        unset($this->Main->Analyzers[$uuid]);
     }
-    if($event instanceof EntityDamageByEntityEvent)
+
+    public function onMove(PlayerMoveEvent $event)
     {
-      $damager      =  $event->getDamager();
-      $damagerHash  = spl_object_hash($entity);
-      if (array_key_exists($damagerHash , $this->Main->Analyzers))
-      {
-        if($damager instanceof Player and $damager != null and $this->Main->Analyzers[$damagerHash]->Player != null)
-        {
-          if ($event->getCause() == EntityDamageEvent::CAUSE_ENTITY_ATTACK)
-          {
-            $this->Main->Analyzers[$damagerHash]->onPlayerPerformsHit($event);
-          }
+        $player = $event->getPlayer();
+        $analyzer = $this->Main->Analyzers[$player->getRawUniqueId()];
+
+        if ($analyzer !== null) {
+            $analyzer->onPlayerMoveEvent($event);
         }
-      }
     }
-  }
 
+    public function onDamage(EntityDamageEvent $event)
+    {
+        $entity = $event->getEntity();
+
+        if ($entity instanceof Player) {
+            $analyzer = $this->Main->Analyzers[$entity->getRawUniqueId()];
+
+            if ($analyzer !== null) {
+                $analyzer->onPlayerGetsHit();
+            }
+        }
+
+        if ($event instanceof EntityDamageByEntityEvent) {
+            $damager = $event->getDamager();
+
+            if ($damager instanceof Player) {
+                $analyzer = $this->Main->Analyzers[$damager->getRawUniqueId()];
+
+                if ($analyzer !== null) {
+                    $analyzer->onPlayerPerformsHit($event);
+                }
+            }
+        }
+    }
 }
