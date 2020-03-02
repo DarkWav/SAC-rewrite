@@ -15,6 +15,7 @@ use pocketmine\utils\TextFormat;
 use pocketmine\command\CommandSender;
 use pocketmine\command\Command;
 use pocketmine\utils\Config;
+use pocketmine\Player;
 
 use DarkWav\SAC\EventListener;
 use DarkWav\SAC\Analyzer;
@@ -101,21 +102,12 @@ class Main extends PluginBase
 
   public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool
   {
-    switch($command->getName()) #get name of entered command and test for SAC commands
+    if($command->getName() == "sac" || $command->getName() == "shadowanticheat") #get name of entered command and test for SAC commands
     {
-      case "sac":
+      $sender->sendMessage(TextFormat::ESCAPE."$this->Colorized"."[SAC] > ShadowAntiCheat v".$this->version." [Dizzy Devil] by DarkWav");
+      if($sender instanceof Player)
       {
-        $sender->sendMessage(TextFormat::ESCAPE."$this->Colorized"."[SAC] > ShadowAntiCheat v".$this->version." [Dizzy Devil] by DarkWav");
-        break;
-      }
-      case "shadowanticheat":
-      {
-        $sender->sendMessage(TextFormat::ESCAPE."$this->Colorized"."[SAC] > ShadowAntiCheat v".$this->version." [Dizzy Devil] by DarkWav");
-        break;
-      }
-      default:
-      {
-        break;
+        $sender->sendMessage(TextFormat::ESCAPE."$this->Colorized"."[SAC] > UUID: ".$sender->getRawUniqueID());
       }
     }
     return false; #do not influence the further processing of the command

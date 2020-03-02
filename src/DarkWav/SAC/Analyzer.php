@@ -243,8 +243,8 @@ class Analyzer
     $this->playerFacingDirectionXZ    = $this->Player->getDirectionVector();
     $this->playerFacingDirectionXZ->y = 0;
     $this->playerFacingDirectionXZ    = $this->playerFacingDirectionXZ->normalize();
-    $this->directionToTarget          = $this->damagedEntityPosition->subsract($this->playerPosition)->normalize();
-    $this->directionToTargetXZ        = $this->damagedEntityPositionXZ->subsract($this->playerPositionXZ)->normalize();
+    $this->directionToTarget          = $this->damagedEntityPosition->subtract($this->playerPosition)->normalize();
+    $this->directionToTargetXZ        = $this->damagedEntityPositionXZ->subtract($this->playerPositionXZ)->normalize();
     $this->hitDistance                = $this->playerPosition->distance($this->damagedEntityPosition);
     $this->hitDistanceXZ              = $this->playerPositionXZ->distance($this->damagedEntityPositionXZ);
     #here comes the maths bois!
