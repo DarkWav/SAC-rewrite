@@ -11,6 +11,7 @@ namespace DarkWav\SAC\checks;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 use pocketmine\event\Cancellable;
+use pocketmine\entity\Effect;
 
 use DarkWav\SAC\Main;
 use DarkWav\SAC\KickTask;
@@ -24,10 +25,11 @@ class SpeedCheck
   public $Counter;
   public function __construct(Analyzer $ana)
   {
-    $this->Analyzer   = $ana;
-    $this->MaxSpeed   = $this->Analyzer->Main->Config->get("Speed.MaxMove");
-    $this->Threshold  = $this->Analyzer->Main->Config->get("Speed.Threshold");
-    $this->Counter    = 0;
+    $this->Analyzer      = $ana;
+    $this->MaxSpeed      = $this->Analyzer->Main->Config->get("Speed.MaxMove");
+    $this->Threshold     = $this->Analyzer->Main->Config->get("Speed.Threshold");
+    $this->Counter       = 0;
+    $this->Leniency      = $this->Analyzer->Main->Config->get("Speed.Leniency");;
   }
   public function run($event) : void
   {
@@ -37,10 +39,22 @@ class SpeedCheck
     if ($this->Analyzer->Player->getGamemode() == Player::SPECTATOR) return;
     $name = $this->Analyzer->PlayerName;
     $speed = $this->Analyzer->XZSpeed;
-    #$this->Analyzer->Player->sendMessage(TextFormat::ESCAPE.$this->Analyzer->Colorized."[SAC] > $name, you are being checked for Speed!");
     $this->Analyzer->Logger->debug(TextFormat::ESCAPE.$this->Analyzer->Colorized."[SAC] > $name is running at $speed blocks per second!");
 
-    if($speed > $this->MaxSpeed)
+    if($this->Analyzer->Player->hasEffect(Effect::SPEED))
+    {
+      $amp        = $this->Analyzer->Player->getEffect(Effect::SPEED)->getAmplifier() + 1;
+      $speedlimit = ($this->MaxSpeed)*(1+(($this->Leniency)*($amp)));
+      if($speed > $speedlimit)
+      {
+        $this->Counter += 2; #increase counter if player travels with unlegit speed
+      }
+      elseif($this->Counter > 0)
+      {
+        $this->Counter--; #decrease counter if player travels with legit speed
+      }
+    }
+    elseif($speed > $this->MaxSpeed)
     {
       $this->Counter += 2; #increase counter if player travels with unlegit speed
     }
@@ -55,8 +69,8 @@ class SpeedCheck
       if($this->Analyzer->Main->Config->get("Speed.Punishment") == "kick")
       {
         $this->Analyzer->kickPlayer($this->Analyzer->Main->Config->get("Speed.KickMessage"));
+        $this->Counter = 0;
       }
     }
-    #TODO
   }
 }

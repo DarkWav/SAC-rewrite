@@ -7,8 +7,8 @@
 ################################################
 #     Metadata of config file                  #
 #     DO NOT EDIT!                             #
-config_version: "1.0.0"                        #
-plugin_version: "4.0.7"                        #
+config_version: "1.0.1"                        #
+plugin_version: "4.0.8"                        #
 ################################################
 # Welcome to ShadowAntiCheat Configuration!
 # Your can change some aspects about how the plugin works,
@@ -57,6 +57,12 @@ Speed: true
 # Increase this if you get Speed false positives.
 
 Speed.MaxMove: 8.0
+
+# How much faster (% of Speed.MaxMove) shall a player be allowed to run per speed level it has?
+# Default: 0.2 (~20%)
+# Increase this if you get Speed false positives when players have the speed effect.
+
+Speed.Leniency: 0.2
 
 # How many moves must a Player perform with unlegit Speed to be punished?
 # Default: 8

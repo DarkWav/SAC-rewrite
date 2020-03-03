@@ -25,8 +25,8 @@ class Main extends PluginBase
 {
   #global variables
   public $Colorized;
-  public $version = "4.0.7";
-  public $config_version = "1.0.0";
+  public $version = "4.0.8";
+  public $config_version = "1.0.1";
   public $logger;
   public $server;
   public $Config;
@@ -105,10 +105,6 @@ class Main extends PluginBase
     if($command->getName() == "sac" || $command->getName() == "shadowanticheat") #get name of entered command and test for SAC commands
     {
       $sender->sendMessage(TextFormat::ESCAPE."$this->Colorized"."[SAC] > ShadowAntiCheat v".$this->version." [Dizzy Devil] by DarkWav");
-      if($sender instanceof Player)
-      {
-        $sender->sendMessage(TextFormat::ESCAPE."$this->Colorized"."[SAC] > UUID: ".$sender->getRawUniqueID());
-      }
     }
     return false; #do not influence the further processing of the command
   }
