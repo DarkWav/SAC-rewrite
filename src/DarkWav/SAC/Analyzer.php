@@ -181,8 +181,8 @@ class Analyzer
     $TimeDiff           = (double)($TickCount) / (double)$TPS;
     if ($TPS > 0.0 and $this->PreviousTick != -1.0)
     {
-      if($TimeDiff < 2.0) #if move events are divided too far apart each other, ignore the move
-      {
+      #if($TimeDiff < 2.0) #if move events are divided too far apart each other, ignore the move # Removed because of potential security issues!
+      #{
         #write distances and times into a a ringbuffer
         $this->XZTimeSum                                      = $this->XZTimeSum     - $this->XZTimeRingBuffer    [$this->XZRingBufferIndex] + $TimeDiff; #ringbuffer time sum (remove oldest, add new)
         $this->XZDistanceSum                                  = $this->XZDistanceSum - $this->XZDistanceRingBuffer[$this->XZRingBufferIndex] + $this->XZDistance; #ringbuffer distance sum (remove oldest, add new) 
@@ -202,7 +202,7 @@ class Analyzer
         {
           $this->YRingBufferIndex = 0; #make ringbuffer index reset once its at the end of the ringbuffer
         }
-      }
+      #}
       #calculate actual average movement speed
       if ($this->XZTimeSum > 0)
       {
