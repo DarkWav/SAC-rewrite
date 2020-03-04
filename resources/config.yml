@@ -58,12 +58,6 @@ Speed: true
 
 Speed.MaxMove: 8.0
 
-# How much faster (% of Speed.MaxMove) shall a player be allowed to run per speed level it has?
-# Default: 0.2 (~20%)
-# Increase this if you get Speed false positives when players have the speed effect.
-
-Speed.Leniency: 0.2
-
 # How many moves must a Player perform with unlegit Speed to be punished?
 # Default: 8
 # Increase this if you get Speed false positives.
