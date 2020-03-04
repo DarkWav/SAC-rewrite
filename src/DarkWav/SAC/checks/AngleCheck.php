@@ -33,9 +33,13 @@ class AngleCheck
     if (($this->Analyzer->AngleXZ > $this->Limit) and ($this->Analyzer->hitDistanceXZ >= $this->MinDistance))
     {
       $event->setCancelled(true);
-      $this->Counter++;
+      $this->Counter+=3;
     }
-    if(($this->Counter >= $this->Threshold) and ($this->Analyzer->Main->Config->get("Angle.Punishment") == "kick"))
+    else
+    {
+      $this->Counter--;
+    }
+    if(($this->Counter >= ($this->Threshold)*3) and ($this->Analyzer->Main->Config->get("Angle.Punishment") == "kick"))
     {
       $this->Analyzer->kickPlayer($this->Analyzer->Main->Config->get("Angle.KickMessage"));
       $this->Counter = 0;
