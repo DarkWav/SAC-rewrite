@@ -75,11 +75,11 @@ class CheckRegister
   {
     #run regular checks
     $this->AngleCheck->run($event);
-    $this->AutoClickerCheck->run($event);
-    $this->CriticalsCheck->run($event);
-    $this->ReachCheck->run($event);
+    $this->AutoClickerCheck->run();
+    $this->CriticalsCheck->run();
+    $this->ReachCheck->run();
     #run heuristics
-    $this->CombatHeuristics->run($event);
+    $this->CombatHeuristics->run();
   }
   
   public function runChecksOnPlayerMoveEvent($event)

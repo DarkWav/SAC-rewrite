@@ -2,7 +2,7 @@
 ## The rewritten version of ShadowAntiCheat for Minecraft:Bedrock Edition
 
 ## Curently planned Checks:
-- Angle (not started)
+- Angle <b>(complete)</b>
 - AutoClicker (not started)
 - CombatHeuristics (not started)
 - CriticalsCheck (not started)
@@ -18,5 +18,5 @@
 - Spider (not started)
 - VClip (not started)
 
-## Current Snapshot: 4.0.8
+## Current Snapshot: 4.0.9
 ### This is currently not functioning and not usable for production<br>If you need a production version, take a look at [SAC](https://github.com/DarkWav/SAC).

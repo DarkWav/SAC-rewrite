@@ -25,8 +25,8 @@ class Main extends PluginBase
 {
   #global variables
   public $Colorized;
-  public $version = "4.0.8";
-  public $config_version = "1.0.1";
+  public $version = "4.0.9";
+  public $config_version = "1.0.2";
   public $logger;
   public $server;
   public $Config;

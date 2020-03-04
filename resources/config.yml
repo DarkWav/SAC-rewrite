@@ -7,8 +7,8 @@
 ################################################
 #     Metadata of config file                  #
 #     DO NOT EDIT!                             #
-config_version: "1.0.1"                        #
-plugin_version: "4.0.8"                        #
+config_version: "1.0.2"                        #
+plugin_version: "4.0.9"                        #
 ################################################
 # Welcome to ShadowAntiCheat Configuration!
 # Your can change some aspects about how the plugin works,
@@ -73,3 +73,39 @@ Speed.Punishment: "kick"
 # Wich message do you want the punished player to be kicked with?
 
 Speed.KickMessage: "[SAC] > You were kicked for using Speed!"
+
+# === Angle Check === #
+#
+# Do you want to enable the Angle check?
+# This prevents players from hitting targets behind them.
+
+Angle: true
+
+# With how much Angle should a player be allowed to hit?
+# Measured in degrees from pointing direcrion
+# Default: 90 (= block hits behind the player)
+# You can lower this when only having Windows 10 Players.
+
+Angle.Limit: 90
+
+# How far away must a player be from its target for the angle check to actually check it?
+# Default: 1.5
+
+Angle.MinDistance: 1.5
+
+# Which punishment should be performed when a player is detected for Angle?
+# "kick"  = kick the player
+# "block" = cancel the illegal hits
+
+Angle.Punishment: "kick"
+
+# How many times must a Player hit with unlegit angles to be kicked?
+# Has no effect if punishment is set to "block".
+# Default: 10
+# Increase this if you get Angle false positives.
+
+Angle.Threshold: 10
+
+# Wich message do you want the punished player to be kicked with?
+
+Angle.KickMessage: "[SAC] > You were kicked for using KillAura (Angle)!"
