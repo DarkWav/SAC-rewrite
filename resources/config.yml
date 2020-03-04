@@ -1,75 +1,78 @@
 ################################################
-#  ShadowAntiCheat by DarkWav.                 #
+#  ShadowAntiCheat by DarkWav and others.      #
 #  Distributed under the MIT License.          #
-#  Copyright (C) 2016-2019 DarkWav and others. #
+#  Copyright (C) 2016-2020 DarkWav and others. #
 ################################################
-#     ShadowAntiCheat Configuration            #
+#        ShadowAntiCheat Configuration         #
 ################################################
-#     Metadata of config file                  #
-#     DO NOT EDIT!                             #
-config_version: "1.0.1"                        #
-plugin_version: "4.0.8"                        #
+# Metadata for internal use only               #
+# DO NOT EDIT!                                 #
+meta:                                          #
+  config_version: "1.0.2"                      #
+  plugin_version: "4.0.8"                      #
 ################################################
+
 # Welcome to ShadowAntiCheat Configuration!
 # Your can change some aspects about how the plugin works,
-# how strict or lenient its checks are, enable checks, disable checks
-# change the looks of the console and chat messages and other cool things.
+# how strict or lenient its checks are, enable/disable checks,
+# change the look of the console and chat messages and other things.
 # If you have any questions, you can ask them at this plugin's github website or
 # contact me (Darku) via a private message on the Pocketmine Forums.
 # If you find any bugs, please report them at the github issue tracker.
-#
-# Bug Report: https://github.com/DarkWav/SAC/issues
-# Pocketmine Forums (contact "Darku"): https://forums.pmmp.io/conversations/add
-#
-# Without further redo, let's get started!
-#
-# What color should SAC use in chat and console?
-# Supported colors:
-# 0 = BLACK
-# 1 = DARK_BLUE
-# 2 = DARK_GREEN
-# 3 = DARK_AQUA
-# 4 = DARK_RED
-# 5 = DARK_PURPLE
-# 6 = GOLD
-# 7 = GRAY
-# 8 = DARK_GRAY
-# 9 = BLUE
-# a = GREEN
-# b = AQUA
-# c = RED
-# d = LIGHT_PURPLE
-# e = YELLOW
-# f = WHITE
 
-Color: 3
+# Github Repository: https://github.com/DarkWav/SAC-rewrite
+# Bug Report: https://github.com/DarkWav/SAC-rewrite/issues
+# Pocketmine Forums (contact "Darku"): https://forums.pmmp.io/members/darku.297/
+
+# Without further redo, let's get started!
+
+# === Punishment Descriptions === #
+# Every check has a field called 'Punishment'. As the name already explains,
+# it lets you configure the punishment a player will receive after exceeding
+# the 'Threshold' value.
+
+# NONE  = Ignore the excess of the given check
+# BLOCK = Block the event und freeze that action
+# KICK  = Kick the player
+
+# === Internal settings === #
+Internal:
+  # What color should SAC use in chat and console?
+  # Supported colors (MC:BE defaults):
+  # 0 = BLACK
+  # 1 = DARK_BLUE
+  # 2 = DARK_GREEN
+  # 3 = DARK_AQUA
+  # 4 = DARK_RED
+  # 5 = DARK_PURPLE
+  # 6 = GOLD
+  # 7 = GRAY
+  # 8 = DARK_GRAY
+  # 9 = BLUE
+  # a = GREEN
+  # b = AQUA
+  # c = RED
+  # d = LIGHT_PURPLE
+  # e = YELLOW
+  # f = WHITE
+  Color: 3
 
 # === Speed Check === #
-#
-# Do you want to enable the Speed check?
-# NOTE: If you disable this, you will not be protected from
-# Combat Hacks which focus on fast movement such as TP-Aura.
-
-Speed: true
-
-# How many blocks per second may a player run to be considered legit?
-# Default: 8.0.
-# Increase this if you get Speed false positives.
-
-Speed.MaxMove: 8.0
-
-# How many moves must a Player perform with unlegit Speed to be punished?
-# Default: 8
-# Increase this if you get Speed false positives.
-
-Speed.Threshold: 8
-
-# Which punishment should be performed when a player is detected for Speed?
-# "kick"  = kick the player
-# "block" = drag the player back and freeze him
-
-Speed.Punishment: "kick"
-
-# Wich message do you want the punished player to be kicked with?
-
-Speed.KickMessage: "[SAC] > You were kicked for using Speed!"
+# This check prevents players from moving to fast
+Speed:
+  # Do you want to enable the Speed check?
+  # NOTE: When disabled, it does you protect from any fast movement
+  #       related cheats such as TP-Aura
+  Activate: true
+  # How many blocks per second may a player run to be considered legit?
+  # DEFAULT: 8.0.
+  # NOTE: Increase this if you get false positives for speed.
+  Max: 8.0
+  # How many unlegit moves must a player perform to be punished?
+  # DEFAULT: 8
+  # NOTE: Increase this if you get false positives for speed.
+  Threshold: 8
+  # Which punishment should be performed when a player is detected for Speed?
+  Punishment: "kick"
+  # Which message do you want to show the punished player as they have been kicked?
+  PunishmentMessage: "[SAC] > You were kicked for using speed!" # TODO Prefix should be handled internally
