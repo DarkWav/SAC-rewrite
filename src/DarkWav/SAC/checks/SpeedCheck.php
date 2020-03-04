@@ -29,7 +29,7 @@ class SpeedCheck
     $this->MaxSpeed      = $this->Analyzer->Main->Config->get("Speed.MaxMove");
     $this->Threshold     = $this->Analyzer->Main->Config->get("Speed.Threshold");
     $this->Counter       = 0;
-    $this->Leniency      = $this->Analyzer->Main->Config->get("Speed.Leniency");;
+    $this->Leniency      = 0.2;
   }
   public function run($event) : void
   {
@@ -43,7 +43,7 @@ class SpeedCheck
 
     if($this->Analyzer->Player->hasEffect(Effect::SPEED))
     {
-      $amp        = $this->Analyzer->Player->getEffect(Effect::SPEED)->getAmplifier() + 1;
+      $amp        = $this->Analyzer->Player->getEffect(Effect::SPEED)->getEffectLevel();
       $speedlimit = ($this->MaxSpeed)*(1+(($this->Leniency)*($amp)));
       if($speed > $speedlimit)
       {
