@@ -29,7 +29,10 @@ class Analyzer
 
   #data
 
-  public $isPvp;
+  #combat
+
+  public $isPvp; #indicator wether hit was performed in a PVP scenario or not
+  public $analyzedHits; #amount of hits used for heuristic analysis
   public $damagedEntityPosition;
   public $damagedEntityPositionXZ;
   public $playerPosition;
@@ -38,12 +41,26 @@ class Analyzer
   public $playerFacingDirectionXZ;
   public $directionToTarget;
   public $directionToTargetXZ;
-  public $hitDistance;
-  public $hitDistanceXZ;
+  public $hitDistance; #Reach Distance
+  public $hitDistanceXZ; #Reach Distance (only X and Z axis)
+  public $hitDistanceXZRingBuffer;
+  public $hitDistanceXZRingBufferSize;
+  public $averageHitDistanceXZ; #average Reach distance across a set amount of hits
   public $directionDotProduct;
   public $directionDotProductXZ;
-  public $hitAngle;
-  public $hitAngleXZ;
+  public $hitAngle; #Hit Angle
+  public $hitAngleXZ; #Hit Angle (only X and Z axis)
+  public $hitAngleXZRingBuffer;
+  public $hitAngleXZRingBufferSize;
+  public $averageHitAngleXZ; #Average Hit Angle across a set amount of hits
+  public $headMove; #Head movement since last hit
+  public $hitAngleXZDifference;
+  public $hitAngleXZDifferenceRingBuffer;
+  public $hitAngleXZDifferenceRingBufferSize;
+  public $averageHitAngleXZDifference; #Average hit angle difference among a set amount of hits where the head has been moved before
+
+  #movement
+
   public $FromXZPos;
   public $ToXZPos;
   public $XZDistance;
@@ -60,8 +77,8 @@ class Analyzer
   public $XZDistanceSum;
   public $YTimeSum;
   public $YDistanceSum;
-  public $XZSpeed;
-  public $YSpeed;
+  public $XZSpeed; #Average Travel Speed (XZ-Axis)
+  public $YSpeed; #Average Travel Speed (Y-Axis)
 
   public function __construct($plr, Main $sac)
   {
@@ -80,21 +97,30 @@ class Analyzer
 
     #processPlayerPerformsHit() data
 
-    $this->isPvp                   = false;
-    $this->damagedEntityPosition   = new Vector3(0.0, 0.0, 0.0);
-    $this->damagedEntityPositionXZ = new Vector3(0.0, 0.0, 0.0);
-    $this->playerPosition          = new Vector3(0.0, 0.0, 0.0);
-    $this->playerPositionXZ        = new Vector3(0.0, 0.0, 0.0);
-    $this->playerFacingDirection   = new Vector3(0.0, 0.0, 0.0);
-    $this->playerFacingDirectionXZ = new Vector3(0.0, 0.0, 0.0);
-    $this->directionToTarget       = new Vector3(0.0, 0.0, 0.0);
-    $this->directionToTargetXZ     = new Vector3(0.0, 0.0, 0.0);
-    $this->hitDistance             = new Vector3(0.0, 0.0, 0.0); #Reach Distance
-    $this->hitDistanceXZ           = new Vector3(0.0, 0.0, 0.0); #Reach Distance (only X and Z axis)
-    $this->directionDotProduct     = 0;
-    $this->directionDotProductXZ   = 0;
-    $this->hitAngle                = 0; #Hit Angle
-    $this->hitAngleXZ              = 0; #Hit Angle (only X and Z axis)
+    $this->isPvp                              = false;
+    $this->analyzedHits                       = 8;
+    $this->damagedEntityPosition              = new Vector3(0.0, 0.0, 0.0);
+    $this->damagedEntityPositionXZ            = new Vector3(0.0, 0.0, 0.0);
+    $this->playerPosition                     = new Vector3(0.0, 0.0, 0.0);
+    $this->playerPositionXZ                   = new Vector3(0.0, 0.0, 0.0);
+    $this->playerFacingDirection              = new Vector3(0.0, 0.0, 0.0);
+    $this->playerFacingDirectionXZ            = new Vector3(0.0, 0.0, 0.0);
+    $this->directionToTarget                  = new Vector3(0.0, 0.0, 0.0);
+    $this->directionToTargetXZ                = new Vector3(0.0, 0.0, 0.0);
+    $this->hitDistance                        = new Vector3(0.0, 0.0, 0.0); 
+    $this->hitDistanceXZ                      = new Vector3(0.0, 0.0, 0.0); 
+    $this->hitDistanceXZRingBufferSize        = $this->analyzedHits;
+    $this->hitDistanceXZRingBuffer            = array_fill(0, $this->hitDistanceXZRingBufferSize);
+    $this->directionDotProduct                = 0;
+    $this->directionDotProductXZ              = 0;
+    $this->hitAngle                           = 0; 
+    $this->hitAngleXZ                         = 0;
+    $this->hitAngleXZRingBufferSize           = $this->analyzedHits;
+    $this->hitAngleXZRingBuffer               = array_fill(0, $this->hitAngleXZRingBufferSize);
+    $this->headMove                           = 0;
+    $this->hitAngleXZDifference               = 0;
+    $this->hitAngleXZDifferenceRingBufferSize = $this->analyzedHits;
+    $this->hitAngleXZDifferenceRingBuffer     = array_fill(0, $this->hitAngleXZDifferenceRingBufferSize);
     
     #processPlayerMoveEvent() data
     
