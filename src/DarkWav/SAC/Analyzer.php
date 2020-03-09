@@ -110,17 +110,17 @@ class Analyzer
     $this->hitDistance                        = new Vector3(0.0, 0.0, 0.0); 
     $this->hitDistanceXZ                      = new Vector3(0.0, 0.0, 0.0); 
     $this->hitDistanceXZRingBufferSize        = $this->analyzedHits;
-    $this->hitDistanceXZRingBuffer            = array_fill(0, $this->hitDistanceXZRingBufferSize);
-    $this->directionDotProduct                = 0;
-    $this->directionDotProductXZ              = 0;
-    $this->hitAngle                           = 0; 
-    $this->hitAngleXZ                         = 0;
+    $this->hitDistanceXZRingBuffer            = array_fill(0, $this->hitDistanceXZRingBufferSize, 0.0);
+    $this->directionDotProduct                = 0.0;
+    $this->directionDotProductXZ              = 0.0;
+    $this->hitAngle                           = 0.0; 
+    $this->hitAngleXZ                         = 0.0;
     $this->hitAngleXZRingBufferSize           = $this->analyzedHits;
-    $this->hitAngleXZRingBuffer               = array_fill(0, $this->hitAngleXZRingBufferSize);
-    $this->headMove                           = 0;
-    $this->hitAngleXZDifference               = 0;
+    $this->hitAngleXZRingBuffer               = array_fill(0, $this->hitAngleXZRingBufferSize, 0.0);
+    $this->headMove                           = 0.0;
+    $this->hitAngleXZDifference               = 0.0;
     $this->hitAngleXZDifferenceRingBufferSize = $this->analyzedHits;
-    $this->hitAngleXZDifferenceRingBuffer     = array_fill(0, $this->hitAngleXZDifferenceRingBufferSize);
+    $this->hitAngleXZDifferenceRingBuffer     = array_fill(0, $this->hitAngleXZDifferenceRingBufferSize, 0.0);
     
     #processPlayerMoveEvent() data
     
@@ -261,6 +261,7 @@ class Analyzer
     {
       $this->isPvp = false;
     }
+    $name = $this->PlayerName;
     $this->damagedEntityPosition      = new Vector3($damagedEntity->getX(), $damagedEntity->getY(), $damagedEntity->getZ());
     $this->damagedEntityPositionXZ    = new Vector3($damagedEntity->getX(), 0                     , $damagedEntity->getZ());
     $this->playerPosition             = new Vector3($this->Player->getX() , $this->Player->getY() , $this->Player->getZ() );
@@ -273,11 +274,19 @@ class Analyzer
     $this->directionToTargetXZ        = $this->damagedEntityPositionXZ->subtract($this->playerPositionXZ)->normalize();
     $this->hitDistance                = $this->playerPosition->distance($this->damagedEntityPosition);
     $this->hitDistanceXZ              = $this->playerPositionXZ->distance($this->damagedEntityPositionXZ);
+    $this->Logger->debug(TextFormat::ESCAPE.$this->Colorized."[SAC] > $name > DistanceXZ: ".$this->hitDistanceXZ);
     #here comes the maths bois!
-    $this->directionDotProduct        = $this->playerPosition->dot($this->damagedEntityPosition);
-    $this->directionDotProductXZ      = $this->playerPositionXZ->dot($this->damagedEntityPositionXZ);
+    $this->directionDotProduct        = $this->playerFacingDirection->dot($this->directionToTarget);
+    $this->directionDotProductXZ      = $this->playerFacingDirectionXZ->dot($this->directionToTargetXZ);
+    $this->Logger->debug(TextFormat::ESCAPE.$this->Colorized."[SAC] > $name > DotProductXZ: ".$this->directionDotProductXZ);
     $this->hitAngle                   = rad2deg(acos($this->directionDotProduct));
     $this->hitAngleXZ                 = rad2deg(acos($this->directionDotProductXZ));
+    $this->Logger->debug(TextFormat::ESCAPE.$this->Colorized."[SAC] > $name > AngleXZ: ".$this->hitAngleXZ);
+    $TPS                              = (double)$this->Server->getTicksPerSecond();
+    if ($TPS > 0.0)
+    {
+      
+    }
   }
   
   #util functions

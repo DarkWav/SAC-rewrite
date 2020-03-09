@@ -30,10 +30,11 @@ class AngleCheck
   {
     if (!$this->Analyzer->Main->Config->get("Angle")) return;
     $name = $this->Analyzer->PlayerName;
-    if (($this->Analyzer->AngleXZ > $this->Limit) and ($this->Analyzer->hitDistanceXZ >= $this->MinDistance))
+    if (($this->Analyzer->hitAngleXZ > $this->Limit) and ($this->Analyzer->hitDistanceXZ >= $this->MinDistance))
     {
       $event->setCancelled(true);
       $this->Counter+=3;
+      $this->Analyzer->Logger->debug(TextFormat::ESCAPE.$this->Analyzer->Colorized."[SAC] > $name > Hit Angle: ".$this->Analyzer->hitAngleXZ);
     }
     else
     {
