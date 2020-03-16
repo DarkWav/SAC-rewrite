@@ -23,6 +23,7 @@ class SpeedCheck
   public $MaxSpeed;
   public $Threshold;
   public $Counter;
+  
   public function __construct(Analyzer $ana)
   {
     $this->Analyzer      = $ana;
@@ -31,6 +32,7 @@ class SpeedCheck
     $this->Counter       = 0;
     $this->Leniency      = 0.2;
   }
+  
   public function run($event) : void
   {
     if ($this->Analyzer->Player->getAllowFlight()) return;
@@ -40,8 +42,29 @@ class SpeedCheck
     $name = $this->Analyzer->PlayerName;
     $speed = $this->Analyzer->XZSpeed;
     $this->Analyzer->Logger->debug(TextFormat::ESCAPE.$this->Analyzer->Colorized."[SAC] > $name is running at $speed blocks per second!");
-
-    if($this->Analyzer->Player->hasEffect(Effect::SPEED))
+    
+    if($this->Analyzer->ignoredMove)
+    {
+      if($this->Analyzer->Player->hasEffect(Effect::SPEED))
+      {
+        $amp        = $this->Analyzer->Player->getEffect(Effect::SPEED)->getEffectLevel();
+        $speedlimit = ($this->MaxSpeed)*(1+(($this->Leniency)*($amp)));
+        $maxdistance = $speedlimit * $this->Analyzer->TimeDiff; #calculate maximum distance for ingored move
+        if($this->Analyzer->XZDistance > $maxdistance)
+        {
+          $event->setCancelled(true); #cancel move event if travelled distance is too high nevertheless, but do not raise counter.
+        }
+      }
+      else
+      {
+        $maxdistance = $this->MaxSpeed * $this->Analyzer->TimeDiff; #calculate maximum distance for ingored move
+        if($this->Analyzer->XZDistance > $maxdistance)
+        {
+          $event->setCancelled(true); #same applies without speed effect.
+        }
+      }
+    }
+    elseif($this->Analyzer->Player->hasEffect(Effect::SPEED))
     {
       $amp        = $this->Analyzer->Player->getEffect(Effect::SPEED)->getEffectLevel();
       $speedlimit = ($this->MaxSpeed)*(1+(($this->Leniency)*($amp)));

@@ -79,6 +79,8 @@ class Analyzer
   public $YDistanceSum;
   public $XZSpeed; #Average Travel Speed (XZ-Axis)
   public $YSpeed; #Average Travel Speed (Y-Axis)
+  public $ignoredMove;
+  public $TimeDiff;
 
   public function __construct($plr, Main $sac)
   {
@@ -145,6 +147,8 @@ class Analyzer
     $this->YDistanceSum            = 0.0;
     $this->XZSpeed                 = 0.0;
     $this->YSpeed                  = 0.0;
+    $this->ignoredMove             = false;
+    $this->TimeDiff                = 0;
   }
 
   # Event handlers
@@ -204,31 +208,36 @@ class Analyzer
     $Tick               = (double)$this->Server->getTick();
     $TPS                = (double)$this->Server->getTicksPerSecond();
     $TickCount          = (double)($Tick - $this->PreviousTick);
-    $TimeDiff           = (double)($TickCount) / (double)$TPS;
+    $this->TimeDiff           = (double)($TickCount) / (double)$TPS;
     if ($TPS > 0.0 and $this->PreviousTick != -1.0)
     {
-      #if($TimeDiff < 2.0) #if move events are divided too far apart each other, ignore the move # Removed because of potential security issues!
-      #{
+      if($this->TimeDiff < 2.0) #if move events are divided too far apart each other, ignore the move
+      {
+        $this->ignoredMove = false;
         #write distances and times into a a ringbuffer
-        $this->XZTimeSum                                      = $this->XZTimeSum     - $this->XZTimeRingBuffer    [$this->XZRingBufferIndex] + $TimeDiff; #ringbuffer time sum (remove oldest, add new)
+        $this->XZTimeSum                                      = $this->XZTimeSum     - $this->XZTimeRingBuffer    [$this->XZRingBufferIndex] + $this->TimeDiff; #ringbuffer time sum (remove oldest, add new)
         $this->XZDistanceSum                                  = $this->XZDistanceSum - $this->XZDistanceRingBuffer[$this->XZRingBufferIndex] + $this->XZDistance; #ringbuffer distance sum (remove oldest, add new) 
-        $this->XZTimeRingBuffer    [$this->XZRingBufferIndex] = $TimeDiff; #overwrite oldest delta_t  with the new one
+        $this->XZTimeRingBuffer    [$this->XZRingBufferIndex] = $this->TimeDiff; #overwrite oldest delta_t  with the new one
         $this->XZDistanceRingBuffer[$this->XZRingBufferIndex] = $this->XZDistance; #overwrite oldest distance with the new one          
         $this->XZRingBufferIndex++; #Update ringbuffer position
         if ($this->XZRingBufferIndex >= $this->XZRingBufferSize)
         {
           $this->XZRingBufferIndex = 0; #make ringbuffer index reset once its at the end of the ringbuffer
         }
-        $this->YTimeSum                                      = $this->YTimeSum     - $this->YTimeRingBuffer    [$this->YRingBufferIndex] + $TimeDiff; #ringbuffer time sum (remove oldest, add new)
+        $this->YTimeSum                                      = $this->YTimeSum     - $this->YTimeRingBuffer    [$this->YRingBufferIndex] + $this->TimeDiff; #ringbuffer time sum (remove oldest, add new)
         $this->YDistanceSum                                  = $this->YDistanceSum - $this->YDistanceRingBuffer[$this->YRingBufferIndex] + $this->YDistance; #ringbuffer distance sum (remove oldest, add new) 
-        $this->YTimeRingBuffer    [$this->YRingBufferIndex]  = $TimeDiff; #overwrite oldest delta_t  with the new one
+        $this->YTimeRingBuffer    [$this->YRingBufferIndex]  = $this->TimeDiff; #overwrite oldest delta_t  with the new one
         $this->YDistanceRingBuffer[$this->YRingBufferIndex]  = $this->YDistance; #overwrite oldest distance with the new one          
         $this->YRingBufferIndex++; #Update ringbuffer position
         if ($this->YRingBufferIndex >= $this->YRingBufferSize)
         {
           $this->YRingBufferIndex = 0; #make ringbuffer index reset once its at the end of the ringbuffer
         }
-      #}
+      }
+      else
+      {
+        $this->ignoredMove = true;
+      }
       #calculate actual average movement speed
       if ($this->XZTimeSum > 0)
       {
