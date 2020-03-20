@@ -31,6 +31,7 @@ class Main extends PluginBase
   public $logger;
   public $server;
   public $Config;
+  public $advancedConfig;
   public $Analyzers = array();
 
   public function onEnable() : void
@@ -40,7 +41,9 @@ class Main extends PluginBase
     $this->server->getPluginManager()->registerEvents(new EventListener($this), $this);
     @mkdir($this->getDataFolder()); #create folder for config files, ect
     $this->saveDefaultConfig();
+    $this->saveResource("advanced.yml", false);
     $this->Config = $this->getConfig();
+    $this->advancedConfig = $this->getResource("advanced.yml");
     $this->Colorized = $this->Config->get("Color"); #set color for output messages
     $this->logger->info("[SAC] > ShadowAntiCheat enabled");
 

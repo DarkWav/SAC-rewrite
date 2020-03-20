@@ -345,7 +345,7 @@ class Analyzer
       $this->averageHitDistanceXZ = $this->hitDistanceXZSum / $this->hitDistanceXZRingBufferSize;
       $this->Logger->debug(TextFormat::ESCAPE.$this->Colorized."[SAC] > $name > AVERAGE DistanceXZ: ".$this->averageHitDistanceXZ);
       
-      if ($this->headMove >= 0.05) #only re-calculate angle-based data when player acutally moved head
+      if ($this->headMove >= 0.05) #only re-calculate angle-based data when player actually moved head
       {
         #average angle
 

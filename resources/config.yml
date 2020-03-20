@@ -108,4 +108,77 @@ Angle.Threshold: 10
 
 # Wich message do you want the punished player to be kicked with?
 
-Angle.KickMessage: "[SAC] > You were kicked for using KillAura (Angle)!"
+Angle.KickMessage: "[SAC] > You were kicked for using KillAura!"
+
+# === Combat Heuristics === #
+#
+# Do you want to enable Combat Heuristics?
+# This advanced algotithim detects various suspicious
+# combat behavior patterns which indicate that the player
+# is using an unlegit client modification allowing him/her
+# to behave in a way a normal player couldn't.
+# This is used to detect not-so-blatant combat hacks such as AimBot, FastClicks,
+# some KillAura variations and FightBots.
+
+CombatHeuristics: true
+
+# How aggressive should the combat heuristics be configured?
+# The higher, the faster cheaters are flagged, but false positives also become more likely
+# The lower, the slower cheaters are flagged, but false positives also become less likely
+# Valid options are:
+# 0 - custom senstivity - configurable in advanced.yml
+# 1 - low senstivity
+# 2 - normal sensitivity (default)
+# 3 - high sensitivity
+
+CombatHeuristics.Sensitivity: 2
+
+# How many hits should the combat heuristics analyze
+# to obtain average values?
+
+CombatHeuristics.AnalyzedHits: 8
+
+# Modules
+# These will check for different suspicious behavior.
+
+# Do you want to enable the Distance module?
+# Checks average distance between targets in fights.
+
+CombatHeuristics.Modules.Distance: true
+
+# Do you want to enable the Accuracy module?
+# Checks how accurately player look at their target when hitting.
+
+CombatHeuristics.Modules.Accuracy: true
+
+# Do you want to enable the Consistency module?
+# Checks how consistent the aim angle of a player is during fights.
+
+CombatHeuristics.Modules.Consistency: true
+
+# Do you want to enable the ClickSpeed module?
+# Checks if players are hitting too fast.
+
+CombatHeuristics.Modules.ClickSpeed: true
+
+# Info: AngleDistanceRelation and SpeedDistanceRelation were previously known as AKAHAD.
+
+# Do you want to enable the AngleDistanceRelation module?
+# Simmilar to the Distance module, but automatically sets more strict limitations
+# as the player hits with higher angles.
+
+CombatHeuristics.Modules.AngleDistanceRelation: true
+
+# Do you want to enable the SpeedDistanceRelation module?
+# Simmilar to the Distance module, but automatically sets more strict limitations
+# as the player moves faster.
+
+CombatHeuristics.Modules.SpeedDistanceRelation: true
+
+# How many times must a player be acting suspiciously to be kicked?
+
+CombatHeuristics.Threshold: 24
+
+# Wich message do you want the punished player to be kicked with?
+
+CombatHeuristics.KickMessage: "[SAC] > You were kicked for Suspicious Combat Behavior!"
