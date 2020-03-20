@@ -4,7 +4,7 @@
 ## Curently planned Checks:
 - Angle <b>(complete)</b>
 - AutoClicker (not started)
-- CombatHeuristics (in progress, 40% complete)
+- CombatHeuristics <b>(in progress, 40% complete)</b>
 - CriticalsCheck (not started)
 - FastBow (not started)
 - FastBreak (not started)
