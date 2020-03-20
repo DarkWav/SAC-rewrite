@@ -39,23 +39,31 @@ class Analyzer
   public $playerPositionXZ;
   public $playerFacingDirection;
   public $playerFacingDirectionXZ;
+  public $lastPlayerFacingDirectionXZ;
   public $directionToTarget;
   public $directionToTargetXZ;
   public $hitDistance; #Reach Distance
   public $hitDistanceXZ; #Reach Distance (only X and Z axis)
+  public $hitDistanceXZSum;
   public $hitDistanceXZRingBuffer;
+  public $hitDistanceXZRingBufferIndex;
   public $hitDistanceXZRingBufferSize;
   public $averageHitDistanceXZ; #average Reach distance across a set amount of hits
   public $directionDotProduct;
   public $directionDotProductXZ;
   public $hitAngle; #Hit Angle
   public $hitAngleXZ; #Hit Angle (only X and Z axis)
+  public $lastHitAngleXZ;
+  public $hitAngleXZSum;
   public $hitAngleXZRingBuffer;
+  public $hitAngleXZRingBufferIndex;
   public $hitAngleXZRingBufferSize;
   public $averageHitAngleXZ; #Average Hit Angle across a set amount of hits
   public $headMove; #Head movement since last hit
   public $hitAngleXZDifference;
+  public $hitAngleXZDifferenceSum;
   public $hitAngleXZDifferenceRingBuffer;
+  public $hitAngleXZDifferenceRingBufferIndex;
   public $hitAngleXZDifferenceRingBufferSize;
   public $averageHitAngleXZDifference; #Average hit angle difference among a set amount of hits where the head has been moved before
 
@@ -99,30 +107,49 @@ class Analyzer
 
     #processPlayerPerformsHit() data
 
-    $this->isPvp                              = false;
-    $this->analyzedHits                       = 8;
-    $this->damagedEntityPosition              = new Vector3(0.0, 0.0, 0.0);
-    $this->damagedEntityPositionXZ            = new Vector3(0.0, 0.0, 0.0);
-    $this->playerPosition                     = new Vector3(0.0, 0.0, 0.0);
-    $this->playerPositionXZ                   = new Vector3(0.0, 0.0, 0.0);
-    $this->playerFacingDirection              = new Vector3(0.0, 0.0, 0.0);
-    $this->playerFacingDirectionXZ            = new Vector3(0.0, 0.0, 0.0);
-    $this->directionToTarget                  = new Vector3(0.0, 0.0, 0.0);
-    $this->directionToTargetXZ                = new Vector3(0.0, 0.0, 0.0);
-    $this->hitDistance                        = new Vector3(0.0, 0.0, 0.0); 
-    $this->hitDistanceXZ                      = new Vector3(0.0, 0.0, 0.0); 
-    $this->hitDistanceXZRingBufferSize        = $this->analyzedHits;
-    $this->hitDistanceXZRingBuffer            = array_fill(0, $this->hitDistanceXZRingBufferSize, 0.0);
-    $this->directionDotProduct                = 0.0;
-    $this->directionDotProductXZ              = 0.0;
-    $this->hitAngle                           = 0.0; 
-    $this->hitAngleXZ                         = 0.0;
-    $this->hitAngleXZRingBufferSize           = $this->analyzedHits;
-    $this->hitAngleXZRingBuffer               = array_fill(0, $this->hitAngleXZRingBufferSize, 0.0);
-    $this->headMove                           = 0.0;
-    $this->hitAngleXZDifference               = 0.0;
-    $this->hitAngleXZDifferenceRingBufferSize = $this->analyzedHits;
-    $this->hitAngleXZDifferenceRingBuffer     = array_fill(0, $this->hitAngleXZDifferenceRingBufferSize, 0.0);
+    $this->isPvp                               = false;
+    $this->analyzedHits                        = 8;
+    
+    $this->damagedEntityPosition               = new Vector3(0.0, 0.0, 0.0);
+    $this->damagedEntityPositionXZ             = new Vector3(0.0, 0.0, 0.0);
+    $this->playerPosition                      = new Vector3(0.0, 0.0, 0.0);
+    $this->playerPositionXZ                    = new Vector3(0.0, 0.0, 0.0);
+    
+    $this->playerFacingDirection               = new Vector3(0.0, 0.0, 0.0);
+    $this->playerFacingDirectionXZ             = new Vector3(0.0, 0.0, 0.0);
+    $this->lastPlayerFacingDirectionXZ         = new Vector3(0.0, 0.0, 0.0);
+    $this->directionToTarget                   = new Vector3(0.0, 0.0, 0.0);
+    $this->directionToTargetXZ                 = new Vector3(0.0, 0.0, 0.0);
+    
+    $this->hitDistance                         = 0.0;
+    $this->hitDistanceXZ                       = 0.0;
+    $this->hitDistanceXZSum                    = 0.0;
+    $this->hitDistanceXZRingBufferSize         = $this->analyzedHits;
+    $this->hitDistanceXZRingBuffer             = array_fill(0, $this->hitDistanceXZRingBufferSize, 0.0);
+    $this->hitDistanceXZRingBufferIndex        = 0;
+    
+    $this->directionDotProduct                 = 0.0;
+    $this->directionDotProductXZ               = 0.0;
+    
+    $this->hitAngle                            = 0.0; 
+    $this->hitAngleXZ                          = 0.0;
+    $this->lastHitAngleXZ                      = 0.0;
+    $this->hitAngleXZSum                       = 0.0;
+    $this->hitAngleXZRingBufferSize            = $this->analyzedHits;
+    $this->hitAngleXZRingBuffer                = array_fill(0, $this->hitAngleXZRingBufferSize, 0.0);
+    $this->hitAngleXZRingBufferIndex           = 0;
+    
+    $this->headMove                            = 0.0;
+    
+    $this->hitAngleXZDifference                = 0.0;
+    $this->hitAngleXZDifferenceSum             = 0.0;
+    $this->hitAngleXZDifferenceRingBufferSize  = $this->analyzedHits;
+    $this->hitAngleXZDifferenceRingBuffer      = array_fill(0, $this->hitAngleXZDifferenceRingBufferSize, 0.0);
+    $this->hitAngleXZDifferenceRingBufferIndex = 0;
+    
+    $this->averageHitDistanceXZ                = 0.0;
+    $this->averageHitAngleXZ                   = 0.0;
+    $this->averageHitAngleXZDifference         = 0.0;
     
     #processPlayerMoveEvent() data
     
@@ -281,6 +308,7 @@ class Analyzer
     $this->playerFacingDirectionXZ    = $this->playerFacingDirectionXZ->normalize();
     $this->directionToTarget          = $this->damagedEntityPosition->subtract($this->playerPosition)->normalize();
     $this->directionToTargetXZ        = $this->damagedEntityPositionXZ->subtract($this->playerPositionXZ)->normalize();
+    $this->headMove                   = $this->playerFacingDirectionXZ->distance($this->lastPlayerFacingDirectionXZ);
     $this->hitDistance                = $this->playerPosition->distance($this->damagedEntityPosition);
     $this->hitDistanceXZ              = $this->playerPositionXZ->distance($this->damagedEntityPositionXZ);
     $this->Logger->debug(TextFormat::ESCAPE.$this->Colorized."[SAC] > $name > DistanceXZ: ".$this->hitDistanceXZ);
@@ -290,12 +318,62 @@ class Analyzer
     $this->Logger->debug(TextFormat::ESCAPE.$this->Colorized."[SAC] > $name > DotProductXZ: ".$this->directionDotProductXZ);
     $this->hitAngle                   = rad2deg(acos($this->directionDotProduct));
     $this->hitAngleXZ                 = rad2deg(acos($this->directionDotProductXZ));
+    $orient = ($this->playerFacingDirectionXZ->x * $this->directionToTargetXZ->z) - ($this->playerFacingDirectionXZ->z * $this->directionToTargetXZ->x);
+    if($orient >= 0)
+    {
+      $this->hitAngleXZDifference       = abs($this->hitAngleXZ - $this->lastHitAngleXZ);
+    }
+    else
+    {
+      $this->hitAngleXZDifference       = abs((-$this->hitAngleXZ) - $this->lastHitAngleXZ); //invert AngleXZ if orient is negative
+    }
+    $this->Logger->debug(TextFormat::ESCAPE.$this->Colorized."[SAC] > $name > AngleXZDifference: ".$this->hitAngleXZDifference);
     $this->Logger->debug(TextFormat::ESCAPE.$this->Colorized."[SAC] > $name > AngleXZ: ".$this->hitAngleXZ);
+    $this->Logger->debug(TextFormat::ESCAPE.$this->Colorized."[SAC] > $name > HeadMove: ".$this->headMove);
     $TPS                              = (double)$this->Server->getTicksPerSecond();
     if ($TPS > 0.0)
     {
+      #compute heuristics-relevant data
+      #average reach
+      $this->hitDistanceXZSum                                             = $this->hitDistanceXZSum - $this->hitDistanceXZRingBuffer[$this->hitDistanceXZRingBufferIndex] + $this->hitDistanceXZ; #add distance to total distance sum
+      $this->hitDistanceXZRingBuffer[$this->hitDistanceXZRingBufferIndex] = $this->hitDistanceXZ; #then write it into ringbuffer
+      $this->hitDistanceXZRingBufferIndex++;
+      if ($this->hitDistanceXZRingBufferIndex >= $this->hitDistanceXZRingBufferSize)
+      {
+        $this->hitDistanceXZRingBufferIndex = 0; #make ringbuffer index reset once its at the end of the ringbuffer
+      }
+      $this->averageHitDistanceXZ = $this->hitDistanceXZSum / $this->hitDistanceXZRingBufferSize;
+      $this->Logger->debug(TextFormat::ESCAPE.$this->Colorized."[SAC] > $name > AVERAGE DistanceXZ: ".$this->averageHitDistanceXZ);
       
+      if ($this->headMove >= 0.05) #only re-calculate angle-based data when player acutally moved head
+      {
+        #average angle
+
+        $this->hitAngleXZSum                                          = $this->hitAngleXZSum - $this->hitAngleXZRingBuffer[$this->hitAngleXZRingBufferIndex] + $this->hitAngleXZ; #add angle to total angle sum
+        $this->hitAngleXZRingBuffer[$this->hitAngleXZRingBufferIndex] = $this->hitAngleXZ; #then write it into ringbuffer
+        $this->hitAngleXZRingBufferIndex++;
+        if ($this->hitAngleXZRingBufferIndex >= $this->hitAngleXZRingBufferSize)
+        {
+          $this->hitAngleXZRingBufferIndex = 0; #make ringbuffer index reset once its at the end of the ringbuffer
+        }
+        $this->averageHitAngleXZ = $this->hitAngleXZSum / $this->hitAngleXZRingBufferSize;
+
+        #average angle difference
+
+        $this->hitAngleXZDifferenceSum                                                    = $this->hitAngleXZDifferenceSum - $this->hitAngleXZDifferenceRingBuffer[$this->hitAngleXZDifferenceRingBufferIndex] + $this->hitAngleXZDifference; #add angle to total angle sum
+        $this->hitAngleXZDifferenceRingBuffer[$this->hitAngleXZDifferenceRingBufferIndex] = $this->hitAngleXZDifference; #then write it into ringbuffer
+        $this->hitAngleXZDifferenceRingBufferIndex++;
+        if ($this->hitAngleXZDifferenceRingBufferIndex >= $this->hitAngleXZDifferenceRingBufferSize)
+        {
+          $this->hitAngleXZDifferenceRingBufferIndex = 0; #make ringbuffer index reset once its at the end of the ringbuffer
+        }
+        $this->averageHitAngleXZDifference = $this->hitAngleXZDifferenceSum / $this->hitAngleXZDifferenceRingBufferSize;
+      }
+      $this->Logger->debug(TextFormat::ESCAPE.$this->Colorized."[SAC] > $name > AVERAGE AngleXZ: ".$this->averageHitAngleXZ);
+      $this->Logger->debug(TextFormat::ESCAPE.$this->Colorized."[SAC] > $name > AVERAGE AngleXZDifference: ".$this->averageHitAngleXZDifference);
     }
+    $this->lastPlayerFacingDirectionXZ = $this->playerFacingDirectionXZ;
+    $this->lastHitAngleXZ              = $this->hitAngleXZ;
   }
   
   #util functions

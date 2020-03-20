@@ -8,7 +8,7 @@
 #     Metadata of config file                  #
 #     DO NOT EDIT!                             #
 config_version: "1.0.2"                        #
-plugin_version: "4.0.9"                        #
+plugin_version: "4.0.10"                       #
 ################################################
 # Welcome to ShadowAntiCheat Configuration!
 # Your can change some aspects about how the plugin works,

@@ -25,7 +25,8 @@ class Main extends PluginBase
 {
   #global variables
   public $Colorized;
-  public $version = "4.0.9";
+  public $version = "4.0.10";
+  public $alternate_version_1 = "4.0.9";
   public $config_version = "1.0.2";
   public $logger;
   public $server;
@@ -57,6 +58,7 @@ class Main extends PluginBase
     switch($this->Config->get("plugin_version")) #check if the config file is compatible with the current version of the plugin.
     {
       case $this->version: break;
+      case $this->alternate_version_1: break;
       default:
       {
         $this->logger->error(TextFormat::RED . "[SAC] > Your configuration file is incompatible with this version of SAC, please delete ./plugin_data/ShadowAntiCheat/config.yml"); #throw error and nofify user about incompatible config
@@ -106,6 +108,6 @@ class Main extends PluginBase
     {
       $sender->sendMessage(TextFormat::ESCAPE."$this->Colorized"."[SAC] > ShadowAntiCheat v".$this->version." [Dizzy Devil] by DarkWav");
     }
-    return false; #do not influence the further processing of the command
+    return false; #do not influence further processing of the command
   }
 }
