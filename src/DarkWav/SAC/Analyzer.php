@@ -58,6 +58,7 @@ class Analyzer
   public $hitAngleXZRingBuffer;
   public $hitAngleXZRingBufferIndex;
   public $hitAngleXZRingBufferSize;
+  public $alreadyAnalyzedHitAngleXZHits;
   public $averageHitAngleXZ; #Average Hit Angle across a set amount of hits
   public $headMove; #Head movement since last hit
   public $hitAngleXZDifference;
@@ -65,7 +66,9 @@ class Analyzer
   public $hitAngleXZDifferenceRingBuffer;
   public $hitAngleXZDifferenceRingBufferIndex;
   public $hitAngleXZDifferenceRingBufferSize;
+  public $alreadyAnalyzedHitAngleXZDifferenceHits;
   public $averageHitAngleXZDifference; #Average hit angle difference among a set amount of hits where the head has been moved before
+  public $averageCPS; #Average Clicks Per Seconds
 
   #movement
 
@@ -108,7 +111,7 @@ class Analyzer
     #processPlayerPerformsHit() data
 
     $this->isPvp                               = false;
-    $this->analyzedHits                        = 8;
+    $this->analyzedHits                        = $this->Main->Config->get("CombatHeuristics.AnalyzedHits");
     
     $this->damagedEntityPosition               = new Vector3(0.0, 0.0, 0.0);
     $this->damagedEntityPositionXZ             = new Vector3(0.0, 0.0, 0.0);
@@ -147,9 +150,13 @@ class Analyzer
     $this->hitAngleXZDifferenceRingBuffer      = array_fill(0, $this->hitAngleXZDifferenceRingBufferSize, 0.0);
     $this->hitAngleXZDifferenceRingBufferIndex = 0;
     
-    $this->averageHitDistanceXZ                = 0.0;
-    $this->averageHitAngleXZ                   = 0.0;
-    $this->averageHitAngleXZDifference         = 0.0;
+    $this->averageHitDistanceXZ                    = 0.0;
+    $this->averageHitAngleXZ                       = 0.0;
+    $this->averageHitAngleXZDifference             = 0.0;
+    $this->averageCPS                              = 0.0;
+
+    $this->alreadyAnalyzedHitAngleXZHits           = 0;
+    $this->alreadyAnalyzedHitAngleXZDifferenceHits = 0;
     
     #processPlayerMoveEvent() data
     
@@ -348,7 +355,7 @@ class Analyzer
       if ($this->headMove >= 0.05) #only re-calculate angle-based data when player actually moved head
       {
         #average angle
-
+        $this->alreadyAnalyzedHitAngleXZHits++;
         $this->hitAngleXZSum                                          = $this->hitAngleXZSum - $this->hitAngleXZRingBuffer[$this->hitAngleXZRingBufferIndex] + $this->hitAngleXZ; #add angle to total angle sum
         $this->hitAngleXZRingBuffer[$this->hitAngleXZRingBufferIndex] = $this->hitAngleXZ; #then write it into ringbuffer
         $this->hitAngleXZRingBufferIndex++;
@@ -359,7 +366,7 @@ class Analyzer
         $this->averageHitAngleXZ = $this->hitAngleXZSum / $this->hitAngleXZRingBufferSize;
 
         #average angle difference
-
+        $this->alreadyAnalyzedHitAngleXZDifferenceHits++;
         $this->hitAngleXZDifferenceSum                                                    = $this->hitAngleXZDifferenceSum - $this->hitAngleXZDifferenceRingBuffer[$this->hitAngleXZDifferenceRingBufferIndex] + $this->hitAngleXZDifference; #add angle to total angle sum
         $this->hitAngleXZDifferenceRingBuffer[$this->hitAngleXZDifferenceRingBufferIndex] = $this->hitAngleXZDifference; #then write it into ringbuffer
         $this->hitAngleXZDifferenceRingBufferIndex++;

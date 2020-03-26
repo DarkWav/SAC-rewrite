@@ -25,8 +25,9 @@ class Main extends PluginBase
 {
   #global variables
   public $Colorized;
-  public $version = "4.0.10";
-  public $alternate_version_1 = "4.0.9";
+  public $version = "4.0.11";
+  public $alternate_version_1 = "4.0.10";
+  public $alternate_version_2 = "4.0.9";
   public $config_version = "1.0.2";
   public $logger;
   public $server;
@@ -43,7 +44,7 @@ class Main extends PluginBase
     $this->saveDefaultConfig();
     $this->saveResource("advanced.yml", false);
     $this->Config = $this->getConfig();
-    $this->advancedConfig = $this->getResource("advanced.yml");
+    $this->advancedConfig = new Config($this->getDataFolder() . "advanced.yml", Config::YAML);
     $this->Colorized = $this->Config->get("Color"); #set color for output messages
     $this->logger->info("[SAC] > ShadowAntiCheat enabled");
 
@@ -62,6 +63,7 @@ class Main extends PluginBase
     {
       case $this->version: break;
       case $this->alternate_version_1: break;
+      case $this->alternate_version_2: break;
       default:
       {
         $this->logger->error(TextFormat::RED . "[SAC] > Your configuration file is incompatible with this version of SAC, please delete ./plugin_data/ShadowAntiCheat/config.yml"); #throw error and nofify user about incompatible config

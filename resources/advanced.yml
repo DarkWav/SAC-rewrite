@@ -7,17 +7,21 @@
 ################################################
 #     Metadata of config file                  #
 #     DO NOT EDIT!                             #
-advanced_config_version: "1.0.0"               #
+advanced_config_version: "1.0.1"               #
 ################################################
 # Advanced config parameters.
 # Checks will use these if configured accordingly
 # I suggest to not change these unless you know what you are doing.
-HEUR_DISTANCE_MAX: 3.9
-HEUR_ACCURACY_MAX: 1.5
-HEUR_CONSISTENCY_MAX: 2.0
+HEUR_DISTANCE_MAX: 3.875
+HEUR_DISTANCE_WEIGHT: 4.0
+HEUR_ACCURACY_MAX: 1.0
+HEUR_ACCURACY_WEIGHT: 2.5
+HEUR_CONSISTENCY_MAX: 1.5
+HEUR_CONSISTENCY_WEIGHT: 1.5
 HEUR_CLICKSPEED_MAX: 15
-HEUR_ANGLE_DISTANCE_RELATION_30DEG_MAX: 3.5
-HEUR_ANGLE_DISTANCE_RELATION_60DEG_MAX: 3.0
+HEUR_CLICKSPEED_WEIGHT: 1.0
+HEUR_ANGLE_DISTANCE_RELATION_30DEG_MAX: 3.625
+HEUR_ANGLE_DISTANCE_RELATION_60DEG_MAX: 3.375
 HEUR_SPEED_DISTANCE_RELATION_MAX: 3.75
 MOVE_MOTION_BYPASS_SECONDS: 10
 MOVE_ICE_BYPASS_SECONDS: 5

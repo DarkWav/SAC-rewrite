@@ -4,7 +4,7 @@
 ## Curently planned Checks:
 - Angle <b>(complete)</b>
 - AutoClicker (not started)
-- CombatHeuristics <b>(in progress, 40% complete)</b>
+- CombatHeuristics <b>(in progress, 90% complete)</b>
 - CriticalsCheck (not started)
 - FastBow (not started)
 - FastBreak (not started)
@@ -18,5 +18,5 @@
 - Spider (not started)
 - VClip (not started)
 
-## Current Snapshot: 4.0.10
+## Current Snapshot: 4.0.11
 ### This is currently not functioning and not usable for production<br>If you need a production version, take a look at [SAC](https://github.com/DarkWav/SAC).
