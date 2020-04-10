@@ -176,7 +176,11 @@ class CombatHeuristics
       }
     }
     #ClickSpeed module
-    if($this->Config->get("CombatHeuristics.Modules.ClickSpeed"))
+    if
+    (
+      $this->Config->get("CombatHeuristics.Modules.ClickSpeed") &&
+      $this->Analyzer->alreadyAnalyzedHits >= $this->Analyzer->analyzedHits #only activate when ringbuffer is properly filled
+    )
     {
       if($this->Analyzer->averageCPS > $this->MaxCPS)
       {

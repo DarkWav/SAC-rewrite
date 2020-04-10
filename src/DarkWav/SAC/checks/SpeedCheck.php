@@ -41,7 +41,6 @@ class SpeedCheck
     if ($this->Analyzer->Player->getGamemode() == Player::SPECTATOR) return;
     $name = $this->Analyzer->PlayerName;
     $speed = $this->Analyzer->XZSpeed;
-    $this->Analyzer->Logger->debug(TextFormat::ESCAPE.$this->Analyzer->Colorized."[SAC] > $name is running at $speed blocks per second!");
     
     if($this->Analyzer->ignoredMove)
     {
