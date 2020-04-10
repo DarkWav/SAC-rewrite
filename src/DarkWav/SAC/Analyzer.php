@@ -390,7 +390,7 @@ class Analyzer
       $this->Logger->debug(TextFormat::ESCAPE.$this->Colorized."[SAC] [Player: $name] [Debug: Combat] > $name > AVERAGE TimeDiff: ".$this->averagehitTimeDifference);
       if($this->averageHitTimeDifference > 0)
       {
-        $this->averageCPS = (1 / $this->averagehitTimeDifference);
+        $this->averageCPS = (1 / $this->averageHitTimeDifference);
       }
       
       
