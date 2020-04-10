@@ -3,13 +3,9 @@
 
 ## Curently planned Checks:
 - Angle <b>(complete)</b>
-- AutoClicker (not started)
 - CombatHeuristics <b>(complete)</b>
-- CriticalsCheck (not started)
 - FastBow (not started)
-- FastBreak (not started)
-- FastPlace (not started)
-- Fly (not started)
+- Fly (to be discussed)
 - Glide (not started)
 - NoClip (not started)
 - Reach (not started)
