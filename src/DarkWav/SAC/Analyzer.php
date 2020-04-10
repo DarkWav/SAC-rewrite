@@ -386,9 +386,9 @@ class Analyzer
       {
         $this->hitTimeDifferenceRingBufferIndex = 0; #make ringbuffer index reset once its at the end of the ringbuffer
       }
-      $this->averagehitTimeDifference = $this->hitTimeDifferenceSum / $this->hitTimeDifferenceRingBufferSize;
+      $this->averageHitTimeDifference = $this->hitTimeDifferenceSum / $this->hitTimeDifferenceRingBufferSize;
       $this->Logger->debug(TextFormat::ESCAPE.$this->Colorized."[SAC] [Player: $name] [Debug: Combat] > $name > AVERAGE TimeDiff: ".$this->averagehitTimeDifference);
-      if($this->averagehitTimeDifference > 0)
+      if($this->averageHitTimeDifference > 0)
       {
         $this->averageCPS = (1 / $this->averagehitTimeDifference);
       }
