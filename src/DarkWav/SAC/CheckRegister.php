@@ -15,7 +15,6 @@ use DarkWav\SAC\Analyzer;
 #import checks
 
 use DarkWav\SAC\checks\AngleCheck;
-use DarkWav\SAC\checks\AutoClickerCheck;
 use DarkWav\SAC\checks\CombatHeuristics;
 use DarkWav\SAC\checks\CriticalsCheck;
 use DarkWav\SAC\checks\FastBowCheck;
@@ -35,7 +34,6 @@ class CheckRegister
   #checks
 
   public $AngleCheck;
-  public $AutoClickerCheck;
   public $CombatHeuristics;
   public $CriticalsCheck;
   public $FastBowCheck;
@@ -55,7 +53,6 @@ class CheckRegister
     #initialize checks
 
     $this->AngleCheck       = new AngleCheck($ana);
-    $this->AutoClickerCheck = new AutoClickerCheck($ana);
     $this->CombatHeuristics = new CombatHeuristics($ana);
     $this->CriticalsCheck   = new CriticalsCheck($ana);
     $this->FastBowCheck     = new FastBowCheck($ana);
@@ -75,7 +72,6 @@ class CheckRegister
   {
     #run regular checks
     $this->AngleCheck->run($event);
-    $this->AutoClickerCheck->run();
     $this->CriticalsCheck->run();
     $this->ReachCheck->run();
     #run heuristics
