@@ -23,6 +23,9 @@ class SpeedCheck
   public $MaxSpeed;
   public $Threshold;
   public $Counter;
+  public $SlimeSeconds;
+  public $MotionSeconds;
+  public $IceSeconds;
   
   public function __construct(Analyzer $ana)
   {
@@ -31,6 +34,9 @@ class SpeedCheck
     $this->Threshold     = $this->Analyzer->Main->Config->get("Speed.Threshold");
     $this->Counter       = 0;
     $this->Leniency      = 0.2;
+    $this->SlimeSeconds  = $this->Analyzer->Main->advancedConfig->get("MOVE_SLIME_BYPASS_SECONDS");
+    $this->MotionSeconds = $this->Analyzer->Main->advancedConfig->get("MOVE_MOTION_BYPASS_SECONDS");
+    $this->IceSeconds    = $this->Analyzer->Main->advancedConfig->get("MOVE_ICE_BYPASS_SECONDS");
   }
   
   public function run($event) : void
@@ -41,6 +47,8 @@ class SpeedCheck
     if ($this->Analyzer->Player->getGamemode() == Player::SPECTATOR) return;
     $name = $this->Analyzer->PlayerName;
     $speed = $this->Analyzer->XZSpeed;
+    $currentTick = (double)$this->Analyzer->Server->getTick();
+    if((($currentTick) - ($this->Analyzer->lastMotionTick)) <= (($this->MotionSeconds)*20)) return; #check if enough time since the last Motion has elapsed
     
     if($this->Analyzer->ignoredMove)
     {

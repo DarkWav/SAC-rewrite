@@ -100,6 +100,7 @@ class Analyzer
   public $YSpeed; #Average Travel Speed (Y-Axis)
   public $ignoredMove;
   public $TimeDiff;
+  public $lastMotionTick;
 
   public function __construct($plr, Main $sac)
   {
@@ -200,6 +201,7 @@ class Analyzer
     $this->YSpeed                  = 0.0;
     $this->ignoredMove             = false;
     $this->TimeDiff                = 0;
+    $this->lastMotionTick          = -1.0;
   }
 
   # Event handlers
@@ -228,6 +230,15 @@ class Analyzer
     $this->processPlayerMoveEvent($event);
     #then run checks
     $this->CheckRegister->runChecksOnPlayerMoveEvent($event);
+  }
+  
+  public function onPlayerReceivesMotion($event): void
+  {
+    if(($event->getVector()->getX() != 0) || ($event->getVector()->getY() != 0) || ($event->getVector()->getZ() != 0)) #ignore motions that don't actually move the player
+    {
+      $this->lastMotionTick = (double)$this->Server->getTick();
+      $this->Logger->debug(TextFormat::ESCAPE.$this->Colorized."[SAC] [Player: ".$this->PlayerName."] [Debug: Movement] > Motion Received!");
+    }
   }
   
   public function onPlayerGetsHit($event): void

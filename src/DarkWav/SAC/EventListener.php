@@ -14,15 +14,17 @@ use pocketmine\event\Listener;
 use pocketmine\event\Cancellable;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
-use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\Player;
 use DarkWav\SAC\Main;
 use DarkWav\SAC\Analyzer;
 
-#event that are listened
+#events that are listened
 
 use pocketmine\event\player\PlayerMoveEvent;
+use pocketmine\event\entity\EntityDamageEvent;
+use pocketmine\event\entity\EntityMotionEvent;
+
 
 class EventListener implements Listener
 {
@@ -91,6 +93,22 @@ class EventListener implements Listener
       if($plr != null and $this->Main->Analyzers[$uuid]->Player != null)
       {
         $this->Main->Analyzers[$uuid]->onPlayerMoveEvent($event);
+      }
+    }
+  }
+  
+  public function onMotion(EntityMotionEvent $event)
+  {
+    $entity = $event->getEntity();
+    if($entity instanceof Player)
+    {
+      $entityuuid = $entity->getRawUniqueID();
+      if (array_key_exists($entityuuid , $this->Main->Analyzers))
+      {
+        if($entity != null and $this->Main->Analyzers[$entityuuid]->Player != null)
+        {
+          $this->Main->Analyzers[$entityuuid]->onPlayerReceivesMotion($event);
+        }
       }
     }
   }

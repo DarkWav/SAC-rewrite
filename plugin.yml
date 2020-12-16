@@ -1,6 +1,6 @@
 name: ShadowAntiCheat
 main: DarkWav\SAC\Main
-version: 4.0.12
+version: 4.0.13
 author: DarkWav
 api: [3.0.0]
 commands:
