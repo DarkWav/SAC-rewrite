@@ -23,7 +23,6 @@ class SpeedCheck
   public $MaxSpeed;
   public $Threshold;
   public $Counter;
-  public $SlimeSeconds;
   public $MotionSeconds;
   public $IceSeconds;
   
@@ -34,9 +33,8 @@ class SpeedCheck
     $this->Threshold     = $this->Analyzer->Main->Config->get("Speed.Threshold");
     $this->Counter       = 0;
     $this->Leniency      = 0.2;
-    $this->SlimeSeconds  = $this->Analyzer->Main->advancedConfig->get("MOVE_SLIME_BYPASS_SECONDS");
     $this->MotionSeconds = $this->Analyzer->Main->advancedConfig->get("MOVE_MOTION_BYPASS_SECONDS");
-    $this->IceSeconds    = $this->Analyzer->Main->advancedConfig->get("MOVE_ICE_BYPASS_SECONDS");
+    $this->IceSeconds    = $this->Analyzer->Main->advancedConfig->get("MOVE_ICE_BYPASS_SECONDS"); #TODO: properly account changes for ice blocks
   }
   
   public function run($event) : void

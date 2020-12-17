@@ -25,11 +25,8 @@ class Main extends PluginBase
 {
   #global variables
   public $Colorized;
-  public $version = "4.0.13";
-  public $alternate_version_1 = "4.0.9";
-  public $alternate_version_2 = "4.0.10";
-  public $alternate_version_3 = "4.0.11";
-  public $alternate_version_4 = "4.0.12";
+  public $version = "4.0.14";
+  public $supported_config_versions = array("4.0.9", "4.0.10", "4.0.11", "4.0.12", "4.0.13", "4.0.14");
   public $config_version = "1.0.2";
   public $logger;
   public $server;
@@ -52,28 +49,14 @@ class Main extends PluginBase
 
     #config integrity check
 
-    switch($this->Config->get("config_version")) #check if the config is up to date.
+    if($this->Config->get("config_version") != $this->config_version || $this->advancedConfig->get("config_version") != $this->config_version) #check if the config is up to date.
     {
-      case $this->config_version: break;
-      default:
-      {
-        $this->logger->warning(TextFormat::YELLOW . "[SAC] > Your configuration file is outdated, please update when possible"); #nofify user about outdated config
-        break;
-      }
+      $this->logger->warning(TextFormat::YELLOW . "[SAC] > Your configuration is outdated, please update when possible"); #nofify user about outdated config
     }
-    switch($this->Config->get("plugin_version")) #check if the config file is compatible with the current version of the plugin.
+    if(!in_array($this->Config->get("plugin_version"), $this->supported_config_versions) || !in_array($this->advancedConfig->get("plugin_version"), $this->supported_config_versions)) #check if the config file is compatible with the current version of the plugin.
     {
-      case $this->version: break;
-      case $this->alternate_version_1: break;
-      case $this->alternate_version_2: break;
-      case $this->alternate_version_3: break;
-      case $this->alternate_version_4: break;
-      default:
-      {
-        $this->logger->error(TextFormat::RED . "[SAC] > Your configuration file is incompatible with this version of SAC, please delete ./plugin_data/ShadowAntiCheat/config.yml"); #throw error and nofify user about incompatible config
-        $this->server->getPluginManager()->disablePlugin($this); #disable the plugin to prevent unpretendable errors
-        break;
-      }
+      $this->logger->error(TextFormat::RED . "[SAC] > Your configuration file is incompatible with this version of SAC, please delete ./plugin_data/ShadowAntiCheat/config.yml and ./plugin_data/ShadowAntiCheat/advanced.yml"); #throw error and nofify user about incompatible config
+      $this->server->getPluginManager()->disablePlugin($this); #disable the plugin to prevent unpretendable errors
     }
     
     #analyzer management
