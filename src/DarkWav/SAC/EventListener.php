@@ -28,8 +28,11 @@ use pocketmine\event\entity\EntityMotionEvent;
 
 class EventListener implements Listener
 {
+  /** @var Main */
   public $Main;
+  /** @var MainLogger */
   public $Logger;
+  /** @var Server */
   public $Server;
 
   public function __construct(Main $mn)
@@ -39,7 +42,7 @@ class EventListener implements Listener
     $this->Server = $mn->getServer();
   }
   
-  public function onJoin(PlayerJoinEvent $event)
+  public function onJoin(PlayerJoinEvent $event) : void
   {
     $plr      = $event->getPlayer();
     $uuid     = $plr->getRawUniqueID();
@@ -69,7 +72,7 @@ class EventListener implements Listener
     }
   }
 
-  public function onQuit(PlayerQuitEvent $event)
+  public function onQuit(PlayerQuitEvent $event) : void
   {
     $plr      = $event->getPlayer();
     $uuid     = $plr->getRawUniqueID();
@@ -84,7 +87,7 @@ class EventListener implements Listener
     }
   }
 
-  public function onMove(PlayerMoveEvent $event)
+  public function onMove(PlayerMoveEvent $event) : void
   {
     $plr      = $event->getPlayer();
     $uuid     = $plr->getRawUniqueID();
@@ -97,7 +100,7 @@ class EventListener implements Listener
     }
   }
   
-  public function onMotion(EntityMotionEvent $event)
+  public function onMotion(EntityMotionEvent $event) : void
   {
     $entity = $event->getEntity();
     if($entity instanceof Player)
@@ -113,7 +116,7 @@ class EventListener implements Listener
     }
   }
   
-  public function onDamage(EntityDamageEvent $event)
+  public function onDamage(EntityDamageEvent $event) : void
   {
     $entity       = $event->getEntity();
     if($entity instanceof Player)
