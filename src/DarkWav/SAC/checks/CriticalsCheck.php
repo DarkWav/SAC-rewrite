@@ -17,11 +17,18 @@ use DarkWav\SAC\Analyzer;
 
 class CriticalsCheck
 {
+  /** @var Analyzer */
   public $Analyzer;
+
+  /**
+   * CriticalsCheck constructor.
+   * @param Analyzer $ana
+   */
   public function __construct(Analyzer $ana)
   {
     $this->Analyzer   = $ana;
   }
+
   public function run() : void
   {
     $name = $this->Analyzer->PlayerName;

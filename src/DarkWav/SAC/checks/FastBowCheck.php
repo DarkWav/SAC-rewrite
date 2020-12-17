@@ -17,11 +17,18 @@ use DarkWav\SAC\Analyzer;
 
 class FastBowCheck
 {
+  /** @var Analyzer */
   public $Analyzer;
+
+  /**
+   * FastBowCheck constructor.
+   * @param Analyzer $ana
+   */
   public function __construct(Analyzer $ana)
   {
     $this->Analyzer   = $ana;
   }
+
   public function run() : void
   {
     $name = $this->Analyzer->PlayerName;

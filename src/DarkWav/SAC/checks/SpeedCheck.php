@@ -8,24 +8,33 @@ namespace DarkWav\SAC\checks;
  *  Copyright (C) 2016-2021 DarkWav and others.
  */
 
+use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\Player;
-use pocketmine\utils\TextFormat;
-use pocketmine\event\Cancellable;
 use pocketmine\entity\Effect;
 
-use DarkWav\SAC\Main;
-use DarkWav\SAC\KickTask;
 use DarkWav\SAC\Analyzer;
 
 class SpeedCheck
 {
+  /** @var Analyzer */
   public $Analyzer;
+  /** @var float */
   public $MaxSpeed;
+  /** @var int */
   public $Threshold;
+  /** @var int */
   public $Counter;
+  /** @var float */
+  public $Leniency;
+  /** @var int */
   public $MotionSeconds;
+  /** @var int */
   public $IceSeconds;
-  
+
+  /**
+   * SpeedCheck constructor.
+   * @param Analyzer $ana
+   */
   public function __construct(Analyzer $ana)
   {
     $this->Analyzer      = $ana;
@@ -36,8 +45,11 @@ class SpeedCheck
     $this->MotionSeconds = $this->Analyzer->Main->advancedConfig->get("MOVE_MOTION_BYPASS_SECONDS");
     $this->IceSeconds    = $this->Analyzer->Main->advancedConfig->get("MOVE_ICE_BYPASS_SECONDS"); #TODO: properly account changes for ice blocks
   }
-  
-  public function run($event) : void
+
+  /**
+   * @param PlayerMoveEvent $event
+   */
+  public function run(PlayerMoveEvent $event) : void
   {
     if ($this->Analyzer->Player->getAllowFlight()) return;
     if (!$this->Analyzer->Main->Config->get("Speed")) return;

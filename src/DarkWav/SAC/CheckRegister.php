@@ -8,10 +8,6 @@ namespace DarkWav\SAC;
  *  Copyright (C) 2016-2021 DarkWav and others.
  */
 
-#import Analzyer
-
-use DarkWav\SAC\Analyzer;
-
 #import checks
 
 use DarkWav\SAC\checks\AngleCheck;
@@ -28,6 +24,8 @@ use DarkWav\SAC\checks\RegenCheck;
 use DarkWav\SAC\checks\SpeedCheck;
 use DarkWav\SAC\checks\SpiderCheck;
 use DarkWav\SAC\checks\VClipCheck;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
+use pocketmine\event\player\PlayerMoveEvent;
 
 class CheckRegister
 {
@@ -61,7 +59,11 @@ class CheckRegister
   public $SpiderCheck;
   /** @var VClipCheck */
   public $VClipCheck;
-  
+
+  /**
+   * CheckRegister constructor.
+   * @param Analyzer $ana
+   */
   public function __construct(Analyzer $ana)
   {
     #initialize checks
@@ -81,8 +83,11 @@ class CheckRegister
     $this->SpiderCheck      = new SpiderCheck($ana);
     $this->VClipCheck       = new VClipCheck($ana);
   }
-  
-  public function runChecksOnPlayerPerformsHit($event) : void
+
+  /**
+   * @param EntityDamageByEntityEvent $event
+   */
+  public function runChecksOnPlayerPerformsHit(EntityDamageByEntityEvent $event) : void
   {
     #run regular checks
     $this->AngleCheck->run($event);
@@ -91,8 +96,11 @@ class CheckRegister
     #run heuristics
     $this->CombatHeuristics->run();
   }
-  
-  public function runChecksOnPlayerMoveEvent($event) : void
+
+  /**
+   * @param PlayerMoveEvent $event
+   */
+  public function runChecksOnPlayerMoveEvent(PlayerMoveEvent $event) : void
   {
     $this->SpeedCheck->run($event);
   }

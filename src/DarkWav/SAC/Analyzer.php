@@ -8,13 +8,15 @@ namespace DarkWav\SAC;
  *  Copyright (C) 2016-2021 DarkWav and others.
  */
 
+use pocketmine\event\entity\EntityDamageByEntityEvent;
+use pocketmine\event\entity\EntityDamageEvent;
+use pocketmine\event\entity\EntityMotionEvent;
+use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\Player;
+use pocketmine\Server;
+use pocketmine\utils\MainLogger;
 use pocketmine\utils\TextFormat;
 use pocketmine\math\Vector3;
-
-use DarkWav\SAC\Main;
-use DarkWav\SAC\KickTask;
-use DarkWav\SAC\CheckRegister;
 
 class Analyzer
 {
@@ -39,7 +41,7 @@ class Analyzer
   #combat
 
   /** @var bool */
-  public $isPvp; #indicator wether hit was performed in a PVP scenario or not
+  public $isPvp; #indicator whether hit was performed in a PVP scenario or not
   /** @var int */
   public $lastHitTick; #Tick where player was last hit
   /** @var int */
@@ -127,6 +129,8 @@ class Analyzer
   /** @var double */
   public $averageHitAngleXZDifference; #Average hit angle difference among a set amount of hits where the head has been moved before
   /** @var double */
+  public $averageHitTimeDifference;
+  /** @var double */
   public $averageCPS; #Average Clicks Per Seconds
   /** @var int */
   public $alreadyAnalyzedHits;
@@ -137,8 +141,14 @@ class Analyzer
   public $FromXZPos;
   /** @var Vector3 */
   public $ToXZPos;
+  /** @var Vector3 */
+  public $FromYPos;
+  /** @var Vector3 */
+  public $ToYPos;
   /** @var double */
   public $XZDistance;
+  /** @var double */
+  public $YDistance;
   /** @var int */
   public $PreviousTick;
   /** @var double[] */
@@ -176,6 +186,11 @@ class Analyzer
   /** @var int */
   public $lastMotionTick;
 
+  /**
+   * Analyzer constructor.
+   * @param Player $plr
+   * @param Main $sac
+   */
   public function __construct(Player $plr, Main $sac)
   {
 
@@ -243,7 +258,7 @@ class Analyzer
     $this->averageHitDistanceXZ                    = 0.0;
     $this->averageHitAngleXZ                       = 0.0;
     $this->averageHitAngleXZDifference             = 0.0;
-    $this->averagehitTimeDifference                = 0.0;
+    $this->averageHitTimeDifference                = 0.0;
     $this->averageCPS                              = 0.0;
 
     $this->alreadyAnalyzedHitAngleXZHits           = 0;
@@ -297,16 +312,22 @@ class Analyzer
   {
     $this->Logger->info(TextFormat::ESCAPE."$this->Colorized" . "[SAC] > $this->PlayerName is no longer watched...");
   }
-  
-  public function onPlayerMoveEvent($event) : void
+
+  /**
+   * @param PlayerMoveEvent $event
+   */
+  public function onPlayerMoveEvent(PlayerMoveEvent $event) : void
   {
     #process event first
     $this->processPlayerMoveEvent($event);
     #then run checks
     $this->CheckRegister->runChecksOnPlayerMoveEvent($event);
   }
-  
-  public function onPlayerReceivesMotion($event): void
+
+  /**
+   * @param EntityMotionEvent $event
+   */
+  public function onPlayerReceivesMotion(EntityMotionEvent $event): void
   {
     if(($event->getVector()->getX() != 0) || ($event->getVector()->getY() != 0) || ($event->getVector()->getZ() != 0)) #ignore motions that don't actually move the player
     {
@@ -314,13 +335,19 @@ class Analyzer
       $this->Logger->debug(TextFormat::ESCAPE.$this->Colorized."[SAC] [Player: ".$this->PlayerName."] [Debug: Movement] > Motion Received!");
     }
   }
-  
-  public function onPlayerGetsHit($event): void
+
+  /**
+   * @param EntityDamageEvent $event
+   */
+  public function onPlayerGetsHit(EntityDamageEvent $event): void
   {
   
   }
 
-  public function onPlayerPerformsHit($event): void
+  /**
+   * @param EntityDamageByEntityEvent $event
+   */
+  public function onPlayerPerformsHit(EntityDamageByEntityEvent $event): void
   {
     #process data
     $this->processPlayerPerformsHit($event);
@@ -330,8 +357,11 @@ class Analyzer
 
   # processing functions
   # these will process data retrieved from events
-  
-  public function processPlayerMoveEvent($event) : void
+
+  /**
+   * @param PlayerMoveEvent $event
+   */
+  public function processPlayerMoveEvent(PlayerMoveEvent $event) : void
   {
     #calculate distance travelled in the event itself in XZ and Y axis.
     $this->FromXZPos    = new Vector3($event->getFrom()->getX(), 0.0, $event->getFrom()->getZ());
@@ -396,7 +426,10 @@ class Analyzer
     $this->PreviousTick = $Tick;
   }
 
-  public function processPlayerPerformsHit($event) : void
+  /**
+   * @param EntityDamageByEntityEvent $event
+   */
+  public function processPlayerPerformsHit(EntityDamageByEntityEvent $event) : void
   {
     $damagedEntity = $event->getEntity();
     $TPS           = (double)$this->Server->getTicksPerSecond();
@@ -514,7 +547,10 @@ class Analyzer
   
   #util functions
 
-  public function kickPlayer($message) : void
+  /**
+   * @param string $message
+   */
+  public function kickPlayer(string $message) : void
   {
     $this->Main->getScheduler()->scheduleDelayedTask(new KickTask($this->Main, $this->Player, $message), 1);
   }

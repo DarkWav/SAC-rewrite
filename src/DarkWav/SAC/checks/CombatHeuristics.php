@@ -9,6 +9,7 @@ namespace DarkWav\SAC\checks;
  */
 
 use pocketmine\Player;
+use pocketmine\utils\Config;
 use pocketmine\utils\TextFormat;
 
 use DarkWav\SAC\Main;
@@ -17,22 +18,43 @@ use DarkWav\SAC\Analyzer;
 
 class CombatHeuristics
 {
+  /** @var Analyzer */
   public $Analyzer;
+  /** @var int */
   public $Threshold;
+  /** @var Config */
   public $Config;
+  /** @var Config */
   public $AConfig;
+  /** @var float */
   public $Counter;
+  /** @var float */
   public $DistanceWeight;
+  /** @var float */
   public $AccuracyWeight;
+  /** @var float */
   public $ConsistencyWeight;
+  /** @var float */
   public $ClickSpeedWeight;
+  /** @var float */
   public $MaxDistance;
+  /** @var float */
   public $MaxAccuracy;
+  /** @var float */
   public $MaxConsistency;
+  /** @var int */
   public $MaxCPS;
+  /** @var float */
   public $MaxDistanceWhileWalking;
+  /** @var float */
   public $MaxDistance30Deg;
+  /** @var float */
   public $MaxDistance60Deg;
+
+  /**
+   * CombatHeuristics constructor.
+   * @param Analyzer $ana
+   */
   public function __construct(Analyzer $ana)
   {
     $this->Analyzer          = $ana;
@@ -101,6 +123,7 @@ class CombatHeuristics
        $this->ClickSpeedWeight        = 0.75 ; # Multiplier for threshold increase if detected by ClickSpeed module
     }
   }
+
   public function run() : void
   {
     $name     = $this->Analyzer->PlayerName;

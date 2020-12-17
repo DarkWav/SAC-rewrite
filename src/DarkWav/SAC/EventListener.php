@@ -11,20 +11,18 @@ namespace DarkWav\SAC;
 #basic imports
 
 use pocketmine\event\Listener;
-use pocketmine\event\Cancellable;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\Player;
-use DarkWav\SAC\Main;
-use DarkWav\SAC\Analyzer;
+use pocketmine\Server;
+use pocketmine\utils\MainLogger;
 
 #events that are listened
 
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityMotionEvent;
-
 
 class EventListener implements Listener
 {
@@ -35,13 +33,20 @@ class EventListener implements Listener
   /** @var Server */
   public $Server;
 
+  /**
+   * EventListener constructor.
+   * @param Main $mn
+   */
   public function __construct(Main $mn)
   {
     $this->Main   = $mn;
     $this->Logger = $mn->getServer()->getLogger();
     $this->Server = $mn->getServer();
   }
-  
+
+  /**
+   * @param PlayerJoinEvent $event
+   */
   public function onJoin(PlayerJoinEvent $event) : void
   {
     $plr      = $event->getPlayer();
@@ -72,6 +77,9 @@ class EventListener implements Listener
     }
   }
 
+  /**
+   * @param PlayerQuitEvent $event
+   */
   public function onQuit(PlayerQuitEvent $event) : void
   {
     $plr      = $event->getPlayer();
@@ -87,6 +95,9 @@ class EventListener implements Listener
     }
   }
 
+  /**
+   * @param PlayerMoveEvent $event
+   */
   public function onMove(PlayerMoveEvent $event) : void
   {
     $plr      = $event->getPlayer();
@@ -99,7 +110,10 @@ class EventListener implements Listener
       }
     }
   }
-  
+
+  /**
+   * @param EntityMotionEvent $event
+   */
   public function onMotion(EntityMotionEvent $event) : void
   {
     $entity = $event->getEntity();
@@ -115,7 +129,10 @@ class EventListener implements Listener
       }
     }
   }
-  
+
+  /**
+   * @param EntityDamageEvent $event
+   */
   public function onDamage(EntityDamageEvent $event) : void
   {
     $entity       = $event->getEntity();

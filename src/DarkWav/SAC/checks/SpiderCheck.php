@@ -8,20 +8,22 @@ namespace DarkWav\SAC\checks;
  *  Copyright (C) 2016-2021 DarkWav and others.
  */
 
-use pocketmine\Player;
-use pocketmine\utils\TextFormat;
-
-use DarkWav\SAC\Main;
-use DarkWav\SAC\KickTask;
 use DarkWav\SAC\Analyzer;
 
 class SpiderCheck
 {
+  /** @var Analyzer */
   public $Analyzer;
+
+  /**
+   * SpiderCheck constructor.
+   * @param Analyzer $ana
+   */
   public function __construct(Analyzer $ana)
   {
     $this->Analyzer   = $ana;
   }
+
   public function run() : void
   {
     $name = $this->Analyzer->PlayerName;
