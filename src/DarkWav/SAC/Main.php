@@ -26,10 +26,7 @@ class Main extends PluginBase
   #global variables
   public $Colorized;
   public $version = "4.0.13";
-  public $alternate_version_1 = "4.0.9";
-  public $alternate_version_2 = "4.0.10";
-  public $alternate_version_3 = "4.0.11";
-  public $alternate_version_4 = "4.0.12";
+  public $alternate_versions = ["4.0.9", "4.0.10", "4.0.11", "4.0.12"];
   public $config_version = "1.0.2";
   public $logger;
   public $server;
@@ -61,27 +58,19 @@ class Main extends PluginBase
         break;
       }
     }
-    switch($this->Config->get("plugin_version")) #check if the config file is compatible with the current version of the plugin.
-    {
-      case $this->version: break;
-      case $this->alternate_version_1: break;
-      case $this->alternate_version_2: break;
-      case $this->alternate_version_3: break;
-      case $this->alternate_version_4: break;
-      default:
-      {
-        $this->logger->error(TextFormat::RED . "[SAC] > Your configuration file is incompatible with this version of SAC, please delete ./plugin_data/ShadowAntiCheat/config.yml"); #throw error and nofify user about incompatible config
-        $this->server->getPluginManager()->disablePlugin($this); #disable the plugin to prevent unpretendable errors
-        break;
-      }
+
+    #check if the config file is compatible with the current version of the plugin.
+    if (!($plugin_version = $this->Config->get("plugin_version")) === $this->version && !in_array($plugin_version, $this->alternate_versions)) {
+      $this->logger->error(TextFormat::RED . "[SAC] > Your configuration file is incompatible with this version of SAC, please delete ./plugin_data/ShadowAntiCheat/config.yml"); #throw error and nofify user about incompatible config
+      $this->server->getPluginManager()->disablePlugin($this); #disable the plugin to prevent unpretendable errors
     }
-    
+
     #analyzer management
     #connect existing players with an analyzer instance
 
     foreach($this->server->getOnlinePlayers() as $player)
     {
-      $uuid     = $player->getgetRawUniqueID();
+      $uuid     = $player->getRawUniqueID();
       $name     = $player->getName();
       $olduuid  = null;
       $analyzer = null;
