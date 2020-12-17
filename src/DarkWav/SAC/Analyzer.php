@@ -39,7 +39,7 @@ class Analyzer
   #combat
 
   /** @var bool */
-  public $isPvp; #indicator wether hit was performed in a PVP scenario or not
+  public $isPvp; #indicator whether hit was performed in a PVP scenario or not
   /** @var int */
   public $lastHitTick; #Tick where player was last hit
   /** @var int */
