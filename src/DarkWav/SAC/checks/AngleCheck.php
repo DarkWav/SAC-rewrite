@@ -17,7 +17,17 @@ use DarkWav\SAC\Analyzer;
 
 class AngleCheck
 {
+  /** @var Analyzer */
   public $Analyzer;
+  /** @var int */
+  public $Counter;
+  /** @var int */
+  public $Threshold;
+  /** @var double */
+  public $Limit;
+  /** @var double */
+  public $MinDistance;
+  
   public function __construct(Analyzer $ana)
   {
     $this->Analyzer    = $ana;

@@ -33,19 +33,33 @@ class CheckRegister
 {
   #checks
 
+  /** @var AngleCheck */
   public $AngleCheck;
+  /** @var CombatHeuristics */
   public $CombatHeuristics;
+  /** @var CriticalsCheck */
   public $CriticalsCheck;
+  /** @var FastBowCheck */
   public $FastBowCheck;
+  /** @var FastBreakCheck */
   public $FastBreakCheck;
+  /** @var FastPlaceCheck */
   public $FastPlaceCheck;
+  /** @var FlyCheck */
   public $FlyCheck;
+  /** @var GlideCheck */
   public $GlideCheck;
+  /** @var NoClipCheck */
   public $NoClipCheck;
+  /** @var ReachCheck */
   public $ReachCheck;
+  /** @var RegenCheck */
   public $RegenCheck;
+  /** @var SpeedCheck */
   public $SpeedCheck;
+  /** @var SpiderCheck */
   public $SpiderCheck;
+  /** @var VClipCheck */
   public $VClipCheck;
   
   public function __construct(Analyzer $ana)
@@ -68,7 +82,7 @@ class CheckRegister
     $this->VClipCheck       = new VClipCheck($ana);
   }
   
-  public function runChecksOnPlayerPerformsHit($event)
+  public function runChecksOnPlayerPerformsHit($event) : void
   {
     #run regular checks
     $this->AngleCheck->run($event);
@@ -78,7 +92,7 @@ class CheckRegister
     $this->CombatHeuristics->run();
   }
   
-  public function runChecksOnPlayerMoveEvent($event)
+  public function runChecksOnPlayerMoveEvent($event) : void
   {
     $this->SpeedCheck->run($event);
   }

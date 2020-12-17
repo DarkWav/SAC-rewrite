@@ -19,8 +19,11 @@ use DarkWav\SAC\Analyzer;
 use DarkWav\SAC\Main;
 class KickTask extends Task
 {
+  /** @var Main */
   public $Main;
+  /** @var String */
   public $Message;
+  /** @var Player */
   public $Player;
 
   public function __construct(Main $mn, Player $plr, $msg)

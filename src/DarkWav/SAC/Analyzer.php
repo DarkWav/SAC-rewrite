@@ -19,90 +19,164 @@ use DarkWav\SAC\CheckRegister;
 class Analyzer
 {
   #golobal variables
+  /** @var Main */
   public $Main;
+  /** @var Player */
   public $Player;
+  /** @var String */
   public $PlayerName;
+  /** @var Server */
   public $Server;
+  /** @var MainLogger */
   public $Logger;
+  /** @var int */
   public $Colorized;
+  /** @var CheckRegister */
   public $CheckRegister;
 
   #data
 
   #combat
 
+  /** @var bool */
   public $isPvp; #indicator wether hit was performed in a PVP scenario or not
+  /** @var int */
   public $lastHitTick; #Tick where player was last hit
+  /** @var int */
   public $hitTickDifference; #Tick difference between 2 hits
+  /** @var double */
   public $hitTimeDifference; #Time difference between 2 hits
+  /** @var double */
   public $hitTimeDifferenceSum;
+  /** @var double[] */
   public $hitTimeDifferenceRingBuffer;
+  /** @var int */
   public $hitTimeDifferenceRingBufferSize;
+  /** @var int */
   public $hitTimeDifferenceRingBufferIndex;
+  /** @var int */
   public $analyzedHits; #amount of hits used for heuristic analysis
+  /** @var Vector3 */
   public $damagedEntityPosition;
+  /** @var Vector3 */
   public $damagedEntityPositionXZ;
+  /** @var Vector3 */
   public $playerPosition;
+  /** @var Vector3 */
   public $playerPositionXZ;
+  /** @var Vector3 */
   public $playerFacingDirection;
+  /** @var Vector3 */
   public $playerFacingDirectionXZ;
+  /** @var Vector3 */
   public $lastPlayerFacingDirectionXZ;
+  /** @var Vector3 */
   public $directionToTarget;
+  /** @var Vector3 */
   public $directionToTargetXZ;
+  /** @var double */
   public $hitDistance; #Reach Distance
+  /** @var double */
   public $hitDistanceXZ; #Reach Distance (only X and Z axis)
+  /** @var double */
   public $hitDistanceXZSum;
+  /** @var double[] */
   public $hitDistanceXZRingBuffer;
+  /** @var int */
   public $hitDistanceXZRingBufferIndex;
+  /** @var int */
   public $hitDistanceXZRingBufferSize;
+  /** @var double */
   public $averageHitDistanceXZ; #average Reach distance across a set amount of hits
+  /** @var double */
   public $directionDotProduct;
+  /** @var double */
   public $directionDotProductXZ;
+  /** @var double */
   public $hitAngle; #Hit Angle
+  /** @var double */
   public $hitAngleXZ; #Hit Angle (only X and Z axis)
+  /** @var double */
   public $lastHitAngleXZ;
+  /** @var double */
   public $hitAngleXZSum;
+  /** @var double[] */
   public $hitAngleXZRingBuffer;
+  /** @var int */
   public $hitAngleXZRingBufferIndex;
+  /** @var int */
   public $hitAngleXZRingBufferSize;
+  /** @var int */
   public $alreadyAnalyzedHitAngleXZHits;
+  /** @var double */
   public $averageHitAngleXZ; #Average Hit Angle across a set amount of hits
+  /** @var double */
   public $headMove; #Head movement since last hit
+  /** @var double */
   public $hitAngleXZDifference;
+  /** @var double */
   public $hitAngleXZDifferenceSum;
+  /** @var double[] */
   public $hitAngleXZDifferenceRingBuffer;
+  /** @var int */
   public $hitAngleXZDifferenceRingBufferIndex;
+  /** @var int */
   public $hitAngleXZDifferenceRingBufferSize;
+  /** @var int */
   public $alreadyAnalyzedHitAngleXZDifferenceHits;
+  /** @var double */
   public $averageHitAngleXZDifference; #Average hit angle difference among a set amount of hits where the head has been moved before
+  /** @var double */
   public $averageCPS; #Average Clicks Per Seconds
+  /** @var int */
   public $alreadyAnalyzedHits;
 
   #movement
 
+  /** @var Vector3 */
   public $FromXZPos;
+  /** @var Vector3 */
   public $ToXZPos;
+  /** @var double */
   public $XZDistance;
+  /** @var int */
   public $PreviousTick;
+  /** @var double[] */
   public $XZTimeRingBuffer;
+  /** @var double[] */
   public $XZDistanceRingBuffer;
+  /** @var double[] */
   public $YTimeRingBuffer;
+  /** @var double[] */
   public $YDistanceRingBuffer;
+  /** @var int */
   public $XZRingBufferSize;
+  /** @var int */
   public $YRingBufferSize;
+  /** @var int */
   public $XZRingBufferIndex;
+  /** @var int */
   public $YRingBufferIndex;
+  /** @var double */
   public $XZTimeSum;
+  /** @var double */
   public $XZDistanceSum;
+  /** @var double */
   public $YTimeSum;
+  /** @var double */
   public $YDistanceSum;
+  /** @var double */
   public $XZSpeed; #Average Travel Speed (XZ-Axis)
+  /** @var double */
   public $YSpeed; #Average Travel Speed (Y-Axis)
+  /** @var bool */
   public $ignoredMove;
+  /** @var double */
   public $TimeDiff;
+  /** @var int */
   public $lastMotionTick;
 
-  public function __construct($plr, Main $sac)
+  public function __construct(Player $plr, Main $sac)
   {
 
     #initialize basic variables
@@ -223,7 +297,7 @@ class Analyzer
   {
     $this->Logger->info(TextFormat::ESCAPE."$this->Colorized" . "[SAC] > $this->PlayerName is no longer watched...");
   }
-
+  
   public function onPlayerMoveEvent($event) : void
   {
     #process event first
