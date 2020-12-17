@@ -9,14 +9,9 @@ namespace DarkWav\SAC;
  */
 
 use pocketmine\utils\TextFormat;
-use pocketmine\command\ConsoleCommandSender;
-use pocketmine\plugin\Plugin;
 use pocketmine\Player;
 use pocketmine\scheduler\Task;
-use pocketmine\scheduler\TaskScheduler;
 
-use DarkWav\SAC\Analyzer;
-use DarkWav\SAC\Main;
 class KickTask extends Task
 {
   /** @var Main */
@@ -26,12 +21,22 @@ class KickTask extends Task
   /** @var Player */
   public $Player;
 
+  /**
+   * KickTask constructor.
+   * @param Main $mn
+   * @param Player $plr
+   * @param $msg
+   */
   public function __construct(Main $mn, Player $plr, $msg)
   {
     $this->Main    = $mn;
     $this->Message = $msg;
     $this->Player  = $plr;
   }
+
+  /**
+   * @param int $currentTick
+   */
   public function onRun(int $currentTick) : void
   {
     if ($this->Player != null && $this->Player->isOnline())

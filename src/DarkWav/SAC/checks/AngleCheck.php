@@ -8,6 +8,7 @@ namespace DarkWav\SAC\checks;
  *  Copyright (C) 2016-2021 DarkWav and others.
  */
 
+use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\Player;
 use pocketmine\utils\TextFormat;
 
@@ -27,7 +28,11 @@ class AngleCheck
   public $Limit;
   /** @var double */
   public $MinDistance;
-  
+
+  /**
+   * AngleCheck constructor.
+   * @param Analyzer $ana
+   */
   public function __construct(Analyzer $ana)
   {
     $this->Analyzer    = $ana;
@@ -36,7 +41,11 @@ class AngleCheck
     $this->Limit       = $this->Analyzer->Main->Config->get("Angle.Limit");
     $this->MinDistance = $this->Analyzer->Main->Config->get("Angle.MinDistance");
   }
-  public function run($event) : void
+
+  /**
+   * @param EntityDamageByEntityEvent $event
+   */
+  public function run(EntityDamageByEntityEvent $event) : void
   {
     if (!$this->Analyzer->Main->Config->get("Angle")) return;
     $name = $this->Analyzer->PlayerName;

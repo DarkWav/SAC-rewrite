@@ -11,15 +11,12 @@ namespace DarkWav\SAC;
 # imports
 
 use pocketmine\plugin\PluginBase;
+use pocketmine\Server;
+use pocketmine\utils\MainLogger;
 use pocketmine\utils\TextFormat;
 use pocketmine\command\CommandSender;
 use pocketmine\command\Command;
 use pocketmine\utils\Config;
-use pocketmine\Player;
-
-use DarkWav\SAC\EventListener;
-use DarkWav\SAC\Analyzer;
-use DarkWav\SAC\KickTask;
 
 class Main extends PluginBase
 {
@@ -29,7 +26,7 @@ class Main extends PluginBase
   /** @var String */
   public $version = "4.0.14";
   /** @var String[] */
-  public $supported_config_versions = array("4.0.9", "4.0.10", "4.0.11", "4.0.12", "4.0.13", "4.0.14");
+  public $supported_config_versions = ["4.0.9", "4.0.10", "4.0.11", "4.0.12", "4.0.13", "4.0.14"];
   /** @var String */
   public $config_version = "1.0.2";
   /** @var MainLogger */
@@ -41,7 +38,7 @@ class Main extends PluginBase
   /** @var String */
   public $advancedConfig;
   /** @var Analyzer */
-  public $Analyzers = array();
+  public $Analyzers = [];
 
   public function onEnable() : void
   {
@@ -73,7 +70,7 @@ class Main extends PluginBase
 
     foreach($this->server->getOnlinePlayers() as $player)
     {
-      $uuid     = $player->getgetRawUniqueID();
+      $uuid     = $player->getRawUniqueID();
       $name     = $player->getName();
       $olduuid  = null;
       $analyzer = null;
@@ -103,6 +100,13 @@ class Main extends PluginBase
 
   #command handling
 
+  /**
+   * @param CommandSender $sender
+   * @param Command $command
+   * @param string $label
+   * @param array $args
+   * @return bool
+   */
   public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool
   {
     if($command->getName() == "sac" || $command->getName() == "shadowanticheat") #get name of entered command and test for SAC commands
