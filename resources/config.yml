@@ -8,7 +8,7 @@
 #     Metadata of config file                  #
 #     DO NOT EDIT!                             #
 config_version: "1.0.2"                        #
-plugin_version: "4.0.14"                       #
+plugin_version: "4.0.15"                       #
 ################################################
 # Welcome to ShadowAntiCheat Configuration!
 # Your can change some aspects about how the plugin works,
@@ -66,7 +66,7 @@ Speed.Threshold: 8
 
 # Which punishment should be performed when a player is detected for Speed?
 # "kick"  = kick the player
-# "block" = drag the player back and freeze him
+# "block" = drag the player back and freeze them
 
 Speed.Punishment: "kick"
 

@@ -12,10 +12,7 @@ namespace DarkWav\SAC;
 
 use DarkWav\SAC\checks\AngleCheck;
 use DarkWav\SAC\checks\CombatHeuristics;
-use DarkWav\SAC\checks\CriticalsCheck;
 use DarkWav\SAC\checks\FastBowCheck;
-use DarkWav\SAC\checks\FastBreakCheck;
-use DarkWav\SAC\checks\FastPlaceCheck;
 use DarkWav\SAC\checks\FlyCheck;
 use DarkWav\SAC\checks\GlideCheck;
 use DarkWav\SAC\checks\NoClipCheck;
@@ -35,14 +32,8 @@ class CheckRegister
   public AngleCheck $AngleCheck;
   /** @var CombatHeuristics */
   public CombatHeuristics $CombatHeuristics;
-  /** @var CriticalsCheck */
-  public CriticalsCheck $CriticalsCheck;
   /** @var FastBowCheck */
   public FastBowCheck $FastBowCheck;
-  /** @var FastBreakCheck */
-  public FastBreakCheck $FastBreakCheck;
-  /** @var FastPlaceCheck */
-  public FastPlaceCheck $FastPlaceCheck;
   /** @var FlyCheck */
   public FlyCheck $FlyCheck;
   /** @var GlideCheck */
@@ -70,15 +61,12 @@ class CheckRegister
 
     $this->AngleCheck       = new AngleCheck($ana);
     $this->CombatHeuristics = new CombatHeuristics($ana);
-    $this->CriticalsCheck   = new CriticalsCheck($ana);
-    $this->FastBowCheck     = new FastBowCheck($ana);
-    $this->FastBreakCheck   = new FastBreakCheck($ana);
-    $this->FastPlaceCheck   = new FastPlaceCheck($ana);
+    $this->FastBowCheck     = new FastBowCheck($ana); #TODO: listen on EntityShootBowEvent
     $this->FlyCheck         = new FlyCheck($ana);
     $this->GlideCheck       = new GlideCheck($ana);
     $this->NoClipCheck      = new NoClipCheck($ana);
     $this->ReachCheck       = new ReachCheck($ana);
-    $this->RegenCheck       = new RegenCheck($ana);
+    $this->RegenCheck       = new RegenCheck($ana); #TODO: listen on EntityRegainHealthEvent
     $this->SpeedCheck       = new SpeedCheck($ana);
     $this->SpiderCheck      = new SpiderCheck($ana);
     $this->VClipCheck       = new VClipCheck($ana);
@@ -91,7 +79,6 @@ class CheckRegister
   {
     #run regular checks
     $this->AngleCheck->run($event);
-    $this->CriticalsCheck->run();
     $this->ReachCheck->run();
     #run heuristics
     $this->CombatHeuristics->run();
@@ -103,5 +90,10 @@ class CheckRegister
   public function runChecksOnPlayerMoveEvent(PlayerMoveEvent $event) : void
   {
     $this->SpeedCheck->run($event);
+    $this->VClipCheck->run();
+    $this->SpiderCheck->run();
+    $this->FlyCheck->run();
+    $this->NoClipCheck->run();
+    $this->GlideCheck->run();
   }
 }

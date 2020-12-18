@@ -14,6 +14,8 @@ class ReachCheck
 {
   /** @var Analyzer */
   public Analyzer $Analyzer;
+  /** @var float */
+  public float $range;
 
   /**
    * ReachCheck constructor.
@@ -26,6 +28,7 @@ class ReachCheck
 
   public function run() : void
   {
-    $name = $this->Analyzer->PlayerName;
+    $name        = $this->Analyzer->PlayerName;
+    $this->range = $this->Analyzer->hitDistance;
   }
 }
