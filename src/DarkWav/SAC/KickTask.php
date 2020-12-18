@@ -15,19 +15,19 @@ use pocketmine\scheduler\Task;
 class KickTask extends Task
 {
   /** @var Main */
-  public $Main;
+  public Main $Main;
   /** @var String */
-  public $Message;
+  public String $Message;
   /** @var Player */
-  public $Player;
+  public Player $Player;
 
   /**
    * KickTask constructor.
    * @param Main $mn
    * @param Player $plr
-   * @param $msg
+   * @param String $msg
    */
-  public function __construct(Main $mn, Player $plr, $msg)
+  public function __construct(Main $mn, Player $plr, String $msg)
   {
     $this->Main    = $mn;
     $this->Message = $msg;

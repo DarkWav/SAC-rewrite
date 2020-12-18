@@ -27,11 +27,11 @@ use pocketmine\event\entity\EntityMotionEvent;
 class EventListener implements Listener
 {
   /** @var Main */
-  public $Main;
+  public Main $Main;
   /** @var MainLogger */
-  public $Logger;
+  public MainLogger $Logger;
   /** @var Server */
-  public $Server;
+  public Server $Server;
 
   /**
    * EventListener constructor.
@@ -91,7 +91,7 @@ class EventListener implements Listener
       {
         $analyzer->onPlayerQuit();
       }
-      $this->Main->Analyzers[$uuid]->Player = null;
+      unset($this->Main->Analyzers[$uuid]->Player);
     }
   }
 

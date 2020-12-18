@@ -13,7 +13,7 @@ use DarkWav\SAC\Analyzer;
 class SpiderCheck
 {
   /** @var Analyzer */
-  public $Analyzer;
+  public Analyzer $Analyzer;
 
   /**
    * SpiderCheck constructor.

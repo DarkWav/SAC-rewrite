@@ -13,7 +13,7 @@ use DarkWav\SAC\Analyzer;
 class RegenCheck
 {
   /** @var Analyzer */
-  public $Analyzer;
+  public Analyzer $Analyzer;
 
   /**
    * RegenCheck constructor.

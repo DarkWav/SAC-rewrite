@@ -19,37 +19,37 @@ use DarkWav\SAC\Analyzer;
 class CombatHeuristics
 {
   /** @var Analyzer */
-  public $Analyzer;
+  public Analyzer $Analyzer;
   /** @var int */
-  public $Threshold;
+  public int $Threshold;
   /** @var Config */
-  public $Config;
+  public Config $Config;
   /** @var Config */
-  public $AConfig;
+  public Config $AConfig;
   /** @var float */
-  public $Counter;
+  public float $Counter; #The CombatHeuristics counter must be float to be able to work with weights
   /** @var float */
-  public $DistanceWeight;
+  public float $DistanceWeight;
   /** @var float */
-  public $AccuracyWeight;
+  public float $AccuracyWeight;
   /** @var float */
-  public $ConsistencyWeight;
+  public float $ConsistencyWeight;
   /** @var float */
-  public $ClickSpeedWeight;
+  public float $ClickSpeedWeight;
   /** @var float */
-  public $MaxDistance;
+  public float $MaxDistance;
   /** @var float */
-  public $MaxAccuracy;
+  public float $MaxAccuracy;
   /** @var float */
-  public $MaxConsistency;
+  public float $MaxConsistency;
   /** @var int */
-  public $MaxCPS;
+  public float $MaxCPS;
   /** @var float */
-  public $MaxDistanceWhileWalking;
+  public float $MaxDistanceWhileWalking;
   /** @var float */
-  public $MaxDistance30Deg;
+  public float $MaxDistance30Deg;
   /** @var float */
-  public $MaxDistance60Deg;
+  public float $MaxDistance60Deg;
 
   /**
    * CombatHeuristics constructor.

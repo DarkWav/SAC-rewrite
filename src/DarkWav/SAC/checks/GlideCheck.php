@@ -13,7 +13,7 @@ use DarkWav\SAC\Analyzer;
 class GlideCheck
 {
   /** @var Analyzer */
-  public $Analyzer;
+  public Analyzer $Analyzer;
 
   /**
    * GlideCheck constructor.

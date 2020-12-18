@@ -18,7 +18,7 @@ use DarkWav\SAC\Analyzer;
 class FastBowCheck
 {
   /** @var Analyzer */
-  public $Analyzer;
+  public Analyzer $Analyzer;
 
   /**
    * FastBowCheck constructor.

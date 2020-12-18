@@ -13,7 +13,7 @@ use DarkWav\SAC\Analyzer;
 class FastPlaceCheck
 {
   /** @var Analyzer */
-  public $Analyzer;
+  public Analyzer $Analyzer;
 
   /**
    * FastPlaceCheck constructor.

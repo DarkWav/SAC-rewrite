@@ -13,7 +13,7 @@ use DarkWav\SAC\Analyzer;
 class FlyCheck
 {
   /** @var Analyzer */
-  public $Analyzer;
+  public Analyzer $Analyzer;
 
   /**
    * FlyCheck constructor.

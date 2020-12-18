@@ -22,23 +22,23 @@ class Main extends PluginBase
 {
   #global variables
   /** @var int */
-  public $Colorized;
+  public int $Colorized;
   /** @var String */
-  public $version = "4.0.14";
+  public String $version = "4.0.14";
   /** @var String[] */
-  public $supported_config_versions = ["4.0.9", "4.0.10", "4.0.11", "4.0.12", "4.0.13", "4.0.14"];
+  public array $supported_config_versions = ["4.0.9", "4.0.10", "4.0.11", "4.0.12", "4.0.13", "4.0.14"];
   /** @var String */
-  public $config_version = "1.0.2";
+  public String $config_version = "1.0.2";
   /** @var MainLogger */
-  public $logger;
+  public MainLogger $logger;
   /** @var Server */
-  public $server;
+  public Server $server;
   /** @var Config */
-  public $Config;
-  /** @var String */
-  public $advancedConfig;
-  /** @var Analyzer */
-  public $Analyzers = [];
+  public Config $Config;
+  /** @var Config */
+  public Config $advancedConfig;
+  /** @var Analyzer[] */
+  public array $Analyzers = [];
 
   public function onEnable() : void
   {

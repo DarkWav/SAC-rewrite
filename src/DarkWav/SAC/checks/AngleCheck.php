@@ -19,15 +19,15 @@ use DarkWav\SAC\Analyzer;
 class AngleCheck
 {
   /** @var Analyzer */
-  public $Analyzer;
+  public Analyzer $Analyzer;
   /** @var int */
-  public $Counter;
+  public int $Counter;
   /** @var int */
-  public $Threshold;
-  /** @var double */
-  public $Limit;
-  /** @var double */
-  public $MinDistance;
+  public int $Threshold;
+  /** @var float */
+  public float $Limit;
+  /** @var float */
+  public float $MinDistance;
 
   /**
    * AngleCheck constructor.

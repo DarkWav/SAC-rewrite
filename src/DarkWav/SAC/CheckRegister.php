@@ -32,33 +32,33 @@ class CheckRegister
   #checks
 
   /** @var AngleCheck */
-  public $AngleCheck;
+  public AngleCheck $AngleCheck;
   /** @var CombatHeuristics */
-  public $CombatHeuristics;
+  public CombatHeuristics $CombatHeuristics;
   /** @var CriticalsCheck */
-  public $CriticalsCheck;
+  public CriticalsCheck $CriticalsCheck;
   /** @var FastBowCheck */
-  public $FastBowCheck;
+  public FastBowCheck $FastBowCheck;
   /** @var FastBreakCheck */
-  public $FastBreakCheck;
+  public FastBreakCheck $FastBreakCheck;
   /** @var FastPlaceCheck */
-  public $FastPlaceCheck;
+  public FastPlaceCheck $FastPlaceCheck;
   /** @var FlyCheck */
-  public $FlyCheck;
+  public FlyCheck $FlyCheck;
   /** @var GlideCheck */
-  public $GlideCheck;
+  public GlideCheck $GlideCheck;
   /** @var NoClipCheck */
-  public $NoClipCheck;
+  public NoClipCheck $NoClipCheck;
   /** @var ReachCheck */
-  public $ReachCheck;
+  public ReachCheck $ReachCheck;
   /** @var RegenCheck */
-  public $RegenCheck;
+  public RegenCheck $RegenCheck;
   /** @var SpeedCheck */
-  public $SpeedCheck;
+  public SpeedCheck $SpeedCheck;
   /** @var SpiderCheck */
-  public $SpiderCheck;
+  public SpiderCheck $SpiderCheck;
   /** @var VClipCheck */
-  public $VClipCheck;
+  public VClipCheck $VClipCheck;
 
   /**
    * CheckRegister constructor.

@@ -13,7 +13,7 @@ use DarkWav\SAC\Analyzer;
 class NoClipCheck
 {
   /** @var Analyzer */
-  public $Analyzer;
+  public Analyzer $Analyzer;
 
   /**
    * NoClipCheck constructor.

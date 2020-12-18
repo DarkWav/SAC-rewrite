@@ -17,19 +17,19 @@ use DarkWav\SAC\Analyzer;
 class SpeedCheck
 {
   /** @var Analyzer */
-  public $Analyzer;
+  public Analyzer $Analyzer;
   /** @var float */
-  public $MaxSpeed;
+  public float $MaxSpeed;
   /** @var int */
-  public $Threshold;
+  public int $Threshold;
   /** @var int */
-  public $Counter;
+  public int $Counter;
   /** @var float */
-  public $Leniency;
+  public float $Leniency;
   /** @var int */
-  public $MotionSeconds;
+  public int $MotionSeconds;
   /** @var int */
-  public $IceSeconds;
+  public int $IceSeconds;
 
   /**
    * SpeedCheck constructor.

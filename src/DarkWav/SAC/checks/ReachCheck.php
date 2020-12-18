@@ -13,7 +13,7 @@ use DarkWav\SAC\Analyzer;
 class ReachCheck
 {
   /** @var Analyzer */
-  public $Analyzer;
+  public Analyzer $Analyzer;
 
   /**
    * ReachCheck constructor.

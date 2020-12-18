@@ -13,7 +13,7 @@ use DarkWav\SAC\Analyzer;
 class VClipCheck
 {
   /** @var Analyzer  */
-  public $Analyzer;
+  public Analyzer $Analyzer;
 
   /**
    * VClipCheck constructor.

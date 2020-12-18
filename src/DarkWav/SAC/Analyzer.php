@@ -22,169 +22,169 @@ class Analyzer
 {
   #golobal variables
   /** @var Main */
-  public $Main;
+  public Main $Main;
   /** @var Player */
-  public $Player;
+  public Player $Player;
   /** @var String */
-  public $PlayerName;
+  public String $PlayerName;
   /** @var Server */
-  public $Server;
+  public Server $Server;
   /** @var MainLogger */
-  public $Logger;
+  public MainLogger $Logger;
   /** @var int */
-  public $Colorized;
+  public int $Colorized;
   /** @var CheckRegister */
-  public $CheckRegister;
+  public CheckRegister $CheckRegister;
 
   #data
 
   #combat
 
   /** @var bool */
-  public $isPvp; #indicator whether hit was performed in a PVP scenario or not
+  public bool $isPvp; #indicator whether hit was performed in a PVP scenario or not
   /** @var int */
-  public $lastHitTick; #Tick where player was last hit
+  public int $lastHitTick; #Tick where player was last hit
   /** @var int */
-  public $hitTickDifference; #Tick difference between 2 hits
-  /** @var double */
-  public $hitTimeDifference; #Time difference between 2 hits
-  /** @var double */
-  public $hitTimeDifferenceSum;
-  /** @var double[] */
-  public $hitTimeDifferenceRingBuffer;
+  public int $hitTickDifference; #Tick difference between 2 hits
+  /** @var float */
+  public float $hitTimeDifference; #Time difference between 2 hits
+  /** @var float */
+  public float $hitTimeDifferenceSum;
+  /** @var float[] */
+  public array $hitTimeDifferenceRingBuffer;
   /** @var int */
-  public $hitTimeDifferenceRingBufferSize;
+  public int $hitTimeDifferenceRingBufferSize;
   /** @var int */
-  public $hitTimeDifferenceRingBufferIndex;
+  public int $hitTimeDifferenceRingBufferIndex;
   /** @var int */
-  public $analyzedHits; #amount of hits used for heuristic analysis
+  public int $analyzedHits; #amount of hits used for heuristic analysis
   /** @var Vector3 */
-  public $damagedEntityPosition;
+  public Vector3 $damagedEntityPosition;
   /** @var Vector3 */
-  public $damagedEntityPositionXZ;
+  public Vector3 $damagedEntityPositionXZ;
   /** @var Vector3 */
-  public $playerPosition;
+  public Vector3 $playerPosition;
   /** @var Vector3 */
-  public $playerPositionXZ;
+  public Vector3 $playerPositionXZ;
   /** @var Vector3 */
-  public $playerFacingDirection;
+  public Vector3 $playerFacingDirection;
   /** @var Vector3 */
-  public $playerFacingDirectionXZ;
+  public Vector3 $playerFacingDirectionXZ;
   /** @var Vector3 */
-  public $lastPlayerFacingDirectionXZ;
+  public Vector3 $lastPlayerFacingDirectionXZ;
   /** @var Vector3 */
-  public $directionToTarget;
+  public Vector3 $directionToTarget;
   /** @var Vector3 */
-  public $directionToTargetXZ;
-  /** @var double */
-  public $hitDistance; #Reach Distance
-  /** @var double */
-  public $hitDistanceXZ; #Reach Distance (only X and Z axis)
-  /** @var double */
-  public $hitDistanceXZSum;
-  /** @var double[] */
-  public $hitDistanceXZRingBuffer;
+  public Vector3 $directionToTargetXZ;
+  /** @var float */
+  public float $hitDistance; #Reach Distance
+  /** @var float */
+  public float $hitDistanceXZ; #Reach Distance (only X and Z axis)
+  /** @var float */
+  public float $hitDistanceXZSum;
+  /** @var float[] */
+  public array $hitDistanceXZRingBuffer;
   /** @var int */
-  public $hitDistanceXZRingBufferIndex;
+  public int $hitDistanceXZRingBufferIndex;
   /** @var int */
-  public $hitDistanceXZRingBufferSize;
-  /** @var double */
-  public $averageHitDistanceXZ; #average Reach distance across a set amount of hits
-  /** @var double */
-  public $directionDotProduct;
-  /** @var double */
-  public $directionDotProductXZ;
-  /** @var double */
-  public $hitAngle; #Hit Angle
-  /** @var double */
-  public $hitAngleXZ; #Hit Angle (only X and Z axis)
-  /** @var double */
-  public $lastHitAngleXZ;
-  /** @var double */
-  public $hitAngleXZSum;
-  /** @var double[] */
-  public $hitAngleXZRingBuffer;
+  public int $hitDistanceXZRingBufferSize;
+  /** @var float */
+  public float $averageHitDistanceXZ; #average Reach distance across a set amount of hits
+  /** @var float */
+  public float $directionDotProduct;
+  /** @var float */
+  public float $directionDotProductXZ;
+  /** @var float */
+  public float $hitAngle; #Hit Angle
+  /** @var float */
+  public float $hitAngleXZ; #Hit Angle (only X and Z axis)
+  /** @var float */
+  public float $lastHitAngleXZ;
+  /** @var float */
+  public float $hitAngleXZSum;
+  /** @var float[] */
+  public array $hitAngleXZRingBuffer;
   /** @var int */
-  public $hitAngleXZRingBufferIndex;
+  public int $hitAngleXZRingBufferIndex;
   /** @var int */
-  public $hitAngleXZRingBufferSize;
+  public int $hitAngleXZRingBufferSize;
   /** @var int */
-  public $alreadyAnalyzedHitAngleXZHits;
-  /** @var double */
-  public $averageHitAngleXZ; #Average Hit Angle across a set amount of hits
-  /** @var double */
-  public $headMove; #Head movement since last hit
-  /** @var double */
-  public $hitAngleXZDifference;
-  /** @var double */
-  public $hitAngleXZDifferenceSum;
-  /** @var double[] */
-  public $hitAngleXZDifferenceRingBuffer;
+  public int $alreadyAnalyzedHitAngleXZHits;
+  /** @var float */
+  public float $averageHitAngleXZ; #Average Hit Angle across a set amount of hits
+  /** @var float */
+  public float $headMove; #Head movement since last hit
+  /** @var float */
+  public float $hitAngleXZDifference;
+  /** @var float */
+  public float $hitAngleXZDifferenceSum;
+  /** @var float[] */
+  public array $hitAngleXZDifferenceRingBuffer;
   /** @var int */
-  public $hitAngleXZDifferenceRingBufferIndex;
+  public int $hitAngleXZDifferenceRingBufferIndex;
   /** @var int */
-  public $hitAngleXZDifferenceRingBufferSize;
+  public int $hitAngleXZDifferenceRingBufferSize;
   /** @var int */
-  public $alreadyAnalyzedHitAngleXZDifferenceHits;
-  /** @var double */
-  public $averageHitAngleXZDifference; #Average hit angle difference among a set amount of hits where the head has been moved before
-  /** @var double */
-  public $averageHitTimeDifference;
-  /** @var double */
-  public $averageCPS; #Average Clicks Per Seconds
+  public int $alreadyAnalyzedHitAngleXZDifferenceHits;
+  /** @var float */
+  public float $averageHitAngleXZDifference; #Average hit angle difference among a set amount of hits where the head has been moved before
+  /** @var float */
+  public float $averageHitTimeDifference;
+  /** @var float */
+  public float $averageCPS; #Average Clicks Per Seconds
   /** @var int */
-  public $alreadyAnalyzedHits;
+  public int $alreadyAnalyzedHits;
 
   #movement
 
   /** @var Vector3 */
-  public $FromXZPos;
+  public Vector3 $FromXZPos;
   /** @var Vector3 */
-  public $ToXZPos;
+  public Vector3 $ToXZPos;
   /** @var Vector3 */
-  public $FromYPos;
+  public Vector3 $FromYPos;
   /** @var Vector3 */
-  public $ToYPos;
-  /** @var double */
-  public $XZDistance;
-  /** @var double */
-  public $YDistance;
+  public Vector3 $ToYPos;
+  /** @var float */
+  public float $XZDistance;
+  /** @var float */
+  public float $YDistance;
   /** @var int */
-  public $PreviousTick;
-  /** @var double[] */
-  public $XZTimeRingBuffer;
-  /** @var double[] */
-  public $XZDistanceRingBuffer;
-  /** @var double[] */
-  public $YTimeRingBuffer;
-  /** @var double[] */
-  public $YDistanceRingBuffer;
+  public int $PreviousTick;
+  /** @var float[] */
+  public array $XZTimeRingBuffer;
+  /** @var float[] */
+  public array $XZDistanceRingBuffer;
+  /** @var float[] */
+  public array $YTimeRingBuffer;
+  /** @var float[] */
+  public array $YDistanceRingBuffer;
   /** @var int */
-  public $XZRingBufferSize;
+  public int $XZRingBufferSize;
   /** @var int */
-  public $YRingBufferSize;
+  public int $YRingBufferSize;
   /** @var int */
-  public $XZRingBufferIndex;
+  public int $XZRingBufferIndex;
   /** @var int */
-  public $YRingBufferIndex;
-  /** @var double */
-  public $XZTimeSum;
-  /** @var double */
-  public $XZDistanceSum;
-  /** @var double */
-  public $YTimeSum;
-  /** @var double */
-  public $YDistanceSum;
-  /** @var double */
-  public $XZSpeed; #Average Travel Speed (XZ-Axis)
-  /** @var double */
-  public $YSpeed; #Average Travel Speed (Y-Axis)
+  public int $YRingBufferIndex;
+  /** @var float */
+  public float $XZTimeSum;
+  /** @var float */
+  public float $XZDistanceSum;
+  /** @var float */
+  public float $YTimeSum;
+  /** @var float */
+  public float $YDistanceSum;
+  /** @var float */
+  public float $XZSpeed; #Average Travel Speed (XZ-Axis)
+  /** @var float */
+  public float $YSpeed; #Average Travel Speed (Y-Axis)
   /** @var bool */
-  public $ignoredMove;
-  /** @var double */
-  public $TimeDiff;
+  public bool $ignoredMove;
+  /** @var float */
+  public float $TimeDiff;
   /** @var int */
-  public $lastMotionTick;
+  public int $lastMotionTick;
 
   /**
    * Analyzer constructor.
@@ -273,7 +273,7 @@ class Analyzer
     $this->ToYPos                  = new Vector3(0.0, 0.0, 0.0);
     $this->XZDistance              = 0.0;
     $this->YDistance               = 0.0;
-    $this->PreviousTick            = -1.0;
+    $this->PreviousTick            = -1;
     $this->XZRingBufferSize        = 8;
     $this->YRingBufferSize         = 8;
     $this->XZRingBufferIndex       = 0;
@@ -290,7 +290,7 @@ class Analyzer
     $this->YSpeed                  = 0.0;
     $this->ignoredMove             = false;
     $this->TimeDiff                = 0;
-    $this->lastMotionTick          = -1.0;
+    $this->lastMotionTick          = -1;
   }
 
   # Event handlers
@@ -331,7 +331,7 @@ class Analyzer
   {
     if(($event->getVector()->getX() != 0) || ($event->getVector()->getY() != 0) || ($event->getVector()->getZ() != 0)) #ignore motions that don't actually move the player
     {
-      $this->lastMotionTick = (double)$this->Server->getTick();
+      $this->lastMotionTick = (float)$this->Server->getTick();
       $this->Logger->debug(TextFormat::ESCAPE.$this->Colorized."[SAC] [Player: ".$this->PlayerName."] [Debug: Movement] > Motion Received!");
     }
   }
@@ -371,10 +371,10 @@ class Analyzer
     $this->ToYPos       = new Vector3(0.0, $event->getTo()->getY()  , 0.0);
     $this->YDistance    = $this->FromYPos->distance($this->ToYPos);
 
-    $Tick               = (double)$this->Server->getTick();
-    $TPS                = (double)$this->Server->getTicksPerSecond();
-    $TickCount          = (double)($Tick - $this->PreviousTick);
-    $this->TimeDiff           = (double)($TickCount) / (double)$TPS;
+    $Tick               = $this->Server->getTick();
+    $TPS                = (float)$this->Server->getTicksPerSecond();
+    $TickCount          = ($Tick - $this->PreviousTick);
+    $this->TimeDiff           = (float)($TickCount) / (float)$TPS;
     if ($TPS > 0.0 and $this->PreviousTick != -1.0)
     {
       if($this->TimeDiff < 2.0) #if move events are divided too far apart each other, ignore the move
@@ -407,7 +407,7 @@ class Analyzer
       #calculate actual average movement speed
       if ($this->XZTimeSum > 0)
       {
-        $this->XZSpeed = (double)$this->XZDistanceSum / (double)$this->XZTimeSum; #speed = distance / time difference:
+        $this->XZSpeed = (float)$this->XZDistanceSum / (float)$this->XZTimeSum; #speed = distance / time difference:
       }
       else
       {
@@ -415,7 +415,7 @@ class Analyzer
       }
       if ($this->YTimeSum > 0)
       {
-        $this->YSpeed = (double)$this->YDistanceSum  / (double)$this->YTimeSum; #speed = distance / time difference:
+        $this->YSpeed = (float)$this->YDistanceSum  / (float)$this->YTimeSum; #speed = distance / time difference:
       }
       else
       {
@@ -432,7 +432,7 @@ class Analyzer
   public function processPlayerPerformsHit(EntityDamageByEntityEvent $event) : void
   {
     $damagedEntity = $event->getEntity();
-    $TPS           = (double)$this->Server->getTicksPerSecond();
+    $TPS           = (float)$this->Server->getTicksPerSecond();
     if ($damagedEntity instanceof Player)
     {
       $this->isPvp = true;

@@ -13,7 +13,7 @@ use DarkWav\SAC\Analyzer;
 class FastBreakCheck
 {
   /** @var Analyzer */
-  public $Analyzer;
+  public Analyzer $Analyzer;
 
   /**
    * FastBreakCheck constructor.

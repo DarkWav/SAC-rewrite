@@ -18,7 +18,7 @@ use DarkWav\SAC\Analyzer;
 class CriticalsCheck
 {
   /** @var Analyzer */
-  public $Analyzer;
+  public Analyzer $Analyzer;
 
   /**
    * CriticalsCheck constructor.
