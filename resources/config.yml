@@ -7,8 +7,8 @@
 ################################################
 #     Metadata of config file                  #
 #     DO NOT EDIT!                             #
-config_version: "1.0.2"                        #
-plugin_version: "4.0.15"                       #
+config_version: "1.0.3"                        #
+plugin_version: "4.0.16"                       #
 ################################################
 # Welcome to ShadowAntiCheat Configuration!
 # Your can change some aspects about how the plugin works,
@@ -110,6 +110,39 @@ Angle.Threshold: 10
 
 Angle.KickMessage: "[SAC] > You were kicked for using KillAura!"
 
+# === Reach Check === #
+#
+# Do you want to enable the Reach check?
+# This prevents players from hitting targets from too far away.
+
+Reach: true
+
+# With how much Reach should a player be allowed to hit?
+# Measured in blocks from the player
+# Default: 4.0 (Standard Range of PocketMine-MP)
+# Increase this if you get false positives or if you want to enable kicking.
+# Recommended value for kicking-enabled mode: 4.25
+
+Reach.Limit: 4.0
+
+# Which punishment should be performed when a player is detected for Reach?
+# "kick"  = kick the player
+# "block" = cancel the illegal hits
+# WARNING: Setting this to "kick" with a low Limit or Threshold setting may cause large amounts of false positives!
+
+Reach.Punishment: "block"
+
+# How many times must a Player hit from an unlegit distance to be kicked?
+# Has no effect if punishment is set to "block".
+# Default: 24
+# Increase this if you get Reach false positives, some really high values may be required.
+
+Reach.Threshold: 24
+
+# Wich message do you want the punished player to be kicked with?
+
+Reach.KickMessage: "[SAC] > You were kicked for using Reach!"
+
 # === Combat Heuristics === #
 #
 # Do you want to enable Combat Heuristics?
@@ -119,6 +152,7 @@ Angle.KickMessage: "[SAC] > You were kicked for using KillAura!"
 # to behave in a way a normal player couldn't.
 # This is used to detect not-so-blatant combat hacks such as AimBot, FastClicks,
 # some KillAura variations and FightBots.
+# However, it can't detect hacks which don't give their users any noticeable advantage.
 
 CombatHeuristics: true
 

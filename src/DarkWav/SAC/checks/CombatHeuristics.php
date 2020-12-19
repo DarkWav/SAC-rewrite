@@ -214,7 +214,7 @@ class CombatHeuristics
 
     if(!$detected)
     {
-      $this->Counter-=4;
+      $this->Counter-=2;
     }
     if($this->Counter < 0)
     {

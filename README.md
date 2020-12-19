@@ -4,15 +4,15 @@
 ## Curently planned Checks:
 - Angle <b>(complete)</b>
 - CombatHeuristics <b>(in progress, 90% complete)</b>
-- FastBow (in progress, 0% complete)
+- FastBow <b>(in progress, 0% complete)</b>
 - Fly (to be discussed)
 - Glide (not started)
 - NoClip (not started)
-- Reach (in progress, 10% complete)
-- Regen (in progress, 0% complete)
+- Reach <b>(complete)</b>
+- Regen <b>(in progress, 0% complete)</b>
 - Speed <b>(in progress, 90% complete)</b>
 - Spider (not started)
 - VClip (not started)
 
-## Current Snapshot: 4.0.15
+## Current Snapshot: 4.0.16
 ### This is currently not usable for production, but any testing and help is appreciated<br>If you need a production version, take a look at [SAC](https://github.com/DarkWav/SAC).

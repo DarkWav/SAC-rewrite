@@ -79,7 +79,7 @@ class CheckRegister
   {
     #run regular checks
     $this->AngleCheck->run($event);
-    $this->ReachCheck->run();
+    $this->ReachCheck->run($event);
     #run heuristics
     $this->CombatHeuristics->run();
   }

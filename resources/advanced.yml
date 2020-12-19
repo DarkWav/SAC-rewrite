@@ -7,8 +7,8 @@
 ################################################
 #     Metadata of config file                  #
 #     DO NOT EDIT!                             #
-config_version: "1.0.2"                        #
-plugin_version: "4.0.15"                       #
+config_version: "1.0.3"                        #
+plugin_version: "4.0.16"                       #
 ################################################
 # Advanced config parameters.
 # Checks will use these if configured accordingly

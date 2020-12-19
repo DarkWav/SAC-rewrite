@@ -24,13 +24,13 @@ class Main extends PluginBase
   /** @var int */
   public int $Colorized;
   /** @var String */
-  public String $version = "4.0.15";
+  public String $version = "4.0.16";
   /** @var String */
   public String $codename = "no codename yet lol"; #TODO: think of a decent codename for v4 ;)
   /** @var String[] */
-  public array $supported_config_versions = ["4.0.9", "4.0.10", "4.0.11", "4.0.12", "4.0.13", "4.0.14", "4.0.15"];
+  public array $supported_config_versions = ["4.0.16"];
   /** @var String */
-  public String $config_version = "1.0.2";
+  public String $config_version = "1.0.3";
   /** @var MainLogger */
   public MainLogger $logger;
   /** @var Server */
@@ -111,7 +111,7 @@ class Main extends PluginBase
    */
   public function onCommand(CommandSender $sender, Command $command, string $label, array $args) : bool
   {
-    if($command->getName() == "sac" || $command->getName() == "shadowanticheat") #get name of entered command and test for SAC commands
+    if($command->getName() == "shadowanticheat") #get name of entered command and test for SAC commands
     {
       $sender->sendMessage(TextFormat::ESCAPE."$this->Colorized"."[SAC] > ShadowAntiCheat v".$this->version." [".$this->codename."] by DarkWav");
     }

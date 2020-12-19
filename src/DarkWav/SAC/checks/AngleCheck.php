@@ -53,9 +53,8 @@ class AngleCheck
     {
       $event->setCancelled(true);
       $this->Counter+=3;
-      $this->Analyzer->Logger->debug(TextFormat::ESCAPE.$this->Analyzer->Colorized."[SAC] > $name > Hit Angle: ".$this->Analyzer->hitAngleXZ);
     }
-    else
+    elseif($this->Counter > 0)
     {
       $this->Counter--;
     }
