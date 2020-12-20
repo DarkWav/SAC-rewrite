@@ -23,6 +23,8 @@ use DarkWav\SAC\checks\SpiderCheck;
 use DarkWav\SAC\checks\VClipCheck;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\player\PlayerMoveEvent;
+use pocketmine\event\entity\EntityShootBowEvent;
+use pocketmine\event\entity\EntityRegainHealthEvent;
 
 class CheckRegister
 {
@@ -61,12 +63,12 @@ class CheckRegister
 
     $this->AngleCheck       = new AngleCheck($ana);
     $this->CombatHeuristics = new CombatHeuristics($ana);
-    $this->FastBowCheck     = new FastBowCheck($ana); #TODO: listen on EntityShootBowEvent
+    $this->FastBowCheck     = new FastBowCheck($ana);
     $this->FlyCheck         = new FlyCheck($ana);
     $this->GlideCheck       = new GlideCheck($ana);
     $this->NoClipCheck      = new NoClipCheck($ana);
     $this->ReachCheck       = new ReachCheck($ana);
-    $this->RegenCheck       = new RegenCheck($ana); #TODO: listen on EntityRegainHealthEvent
+    $this->RegenCheck       = new RegenCheck($ana);
     $this->SpeedCheck       = new SpeedCheck($ana);
     $this->SpiderCheck      = new SpiderCheck($ana);
     $this->VClipCheck       = new VClipCheck($ana);
@@ -95,5 +97,21 @@ class CheckRegister
     $this->FlyCheck->run();
     $this->NoClipCheck->run();
     $this->GlideCheck->run();
+  }
+  
+  /**
+   * @param EntityShootBowEvent $event
+   */
+  public function runChecksOnEntityShootBowEvent(EntityShootBowEvent $event) : void
+  {
+    $this->FastBowCheck->run();
+  }
+  
+  /**
+   * @param EntityRegainHealthEvent $event
+   */
+  public function runChecksOnEntityRegainHealthEvent(EntityRegainHealthEvent $event) : void
+  {
+    $this->RegenCheck->run();
   }
 }

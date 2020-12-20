@@ -23,6 +23,8 @@ use pocketmine\utils\MainLogger;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityMotionEvent;
+use pocketmine\event\entity\EntityShootBowEvent;
+use pocketmine\event\entity\EntityRegainHealthEvent;
 
 class EventListener implements Listener
 {
@@ -125,6 +127,49 @@ class EventListener implements Listener
         if($entity != null and $this->Main->Analyzers[$entityuuid]->Player != null)
         {
           $this->Main->Analyzers[$entityuuid]->onPlayerReceivesMotion($event);
+        }
+      }
+    }
+  }
+  
+  /**
+   * @param EntityShootBowEvent $event
+   */
+  public function onBowShot(EntityShootBowEvent $event) : void
+  {
+    $entity = $event->getEntity();
+    if($entity instanceof Player)
+    {
+      $entityuuid = $entity->getRawUniqueID();
+      if (array_key_exists($entityuuid , $this->Main->Analyzers))
+      {
+        if($entity != null and $this->Main->Analyzers[$entityuuid]->Player != null)
+        {
+          $this->Main->Analyzers[$entityuuid]->onPlayerShootsBow($event);
+        }
+      }
+    }
+  }
+  
+  /**
+   * @param EntityRegainHealthEvent $event
+   */
+  public function onRegeneration(EntityRegainHealthEvent $event) : void
+  {
+    $entity = $event->getEntity();
+    if($entity instanceof Player)
+    {
+      $entityuuid = $entity->getRawUniqueID();
+      if (array_key_exists($entityuuid , $this->Main->Analyzers))
+      {
+        if($entity != null and $this->Main->Analyzers[$entityuuid]->Player != null)
+        {
+          #only listen if regeneration is natural
+          $reason = $event->getRegainReason();
+          if($reason == EntityRegainHealthEvent::CAUSE_REGEN || $reason == EntityRegainHealthEvent::CAUSE_EATING || $reason == EntityRegainHealthEvent::CAUSE_SATURATION)
+          {
+            $this->Main->Analyzers[$entityuuid]->onPlayerRegainsHealth($event);
+          }
         }
       }
     }

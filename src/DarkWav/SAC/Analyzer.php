@@ -11,6 +11,8 @@ namespace DarkWav\SAC;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\event\entity\EntityMotionEvent;
+use pocketmine\event\entity\EntityShootBowEvent;
+use pocketmine\event\entity\EntityRegainHealthEvent;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\Player;
 use pocketmine\Server;
@@ -354,6 +356,28 @@ class Analyzer
     #then run checks
     $this->CheckRegister->runChecksOnPlayerPerformsHit($event);
   }
+  
+  /**
+   * @param EntityShootBowEvent $event
+   */
+  public function onPlayerShootsBow(EntityShootBowEvent $event): void
+  {
+    #process event first
+    $this->processPlayerShootsBow($event);
+    #then run checks
+    $this->CheckRegister->runChecksOnEntityShootBowEvent($event);
+  }
+  
+  /**
+   * @param EntityRegainHealthEvent $event
+   */
+  public function onPlayerRegainsHealth(EntityRegainHealthEvent $event): void
+  {
+    #process event first
+    $this->processPlayerRegainsHealth($event);
+    #then run checks
+    $this->CheckRegister->runChecksOnEntityRegainHealthEvent($event);
+  }
 
   # processing functions
   # these will process data retrieved from events
@@ -426,6 +450,22 @@ class Analyzer
     $this->PreviousTick = $Tick;
   }
 
+  /**
+   * @param EntityShootBowEvent $event
+   */
+  public function processPlayerShootsBow(EntityShootBowEvent $event) : void
+  {
+  
+  }
+  
+  /**
+   * @param EntityRegainHealthEvent $event
+   */
+  public function processPlayerRegainsHealth(EntityRegainHealthEvent $event) : void
+  {
+  
+  }
+  
   /**
    * @param EntityDamageByEntityEvent $event
    */

@@ -24,11 +24,11 @@ class Main extends PluginBase
   /** @var int */
   public int $Colorized;
   /** @var String */
-  public String $version = "4.0.16";
+  public String $version = "4.0.17";
   /** @var String */
   public String $codename = "no codename yet lol"; #TODO: think of a decent codename for v4 ;)
   /** @var String[] */
-  public array $supported_config_versions = ["4.0.16"];
+  public array $supported_config_versions = ["4.0.16", "4.0.17"];
   /** @var String */
   public String $config_version = "1.0.3";
   /** @var MainLogger */
