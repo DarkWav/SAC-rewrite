@@ -19,6 +19,9 @@ use pocketmine\Server;
 use pocketmine\utils\MainLogger;
 use pocketmine\utils\TextFormat;
 use pocketmine\math\Vector3;
+use pocketmine\level\Level;
+use pocketmine\block\BlockIds;
+use pocketmine\block\Block;
 
 class Analyzer
 {
@@ -593,6 +596,30 @@ class Analyzer
   public function kickPlayer(string $message) : void
   {
     $this->Main->getScheduler()->scheduleDelayedTask(new KickTask($this->Main, $this->Player, $message), 1);
+  }
+  
+  public function areAllBlocksAboveAir() : bool
+  {
+    $level       = $this->Player->getLevel();
+    $posX        = $this->Player->getX();
+    $posY        = $this->Player->getY() + 2;
+    $posZ        = $this->Player->getZ();
+
+    for ($xidx = $posX-1; $xidx <= $posX+1; $xidx = $xidx + 1)
+    {
+      for ($zidx = $posZ-1; $zidx <= $posZ+1; $zidx = $zidx + 1)
+      {
+        $pos   = new Vector3($xidx, $posY, $zidx);
+        $block = $level->getBlock($pos)->getId();
+        if ($block != Block::AIR)
+        {
+          $this->Logger->debug(TextFormat::ESCAPE.$this->Colorized."[SAC] [Player: ".$this->PlayerName."] [Debug: Movement] > areAllBlocksAboveAir: false");
+          return false;
+        }
+      }
+    }
+    $this->Logger->debug(TextFormat::ESCAPE.$this->Colorized."[SAC] [Player: ".$this->PlayerName."] [Debug: Movement] > areAllBlocksAboveAir: true");
+    return true;
   }
 
 }

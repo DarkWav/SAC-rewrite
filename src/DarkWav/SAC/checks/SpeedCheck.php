@@ -20,6 +20,8 @@ class SpeedCheck
   public Analyzer $Analyzer;
   /** @var float */
   public float $MaxSpeed;
+  /** @var float */
+  public float $ConfiguredSpeed;
   /** @var int */
   public int $Threshold;
   /** @var int */
@@ -37,13 +39,13 @@ class SpeedCheck
    */
   public function __construct(Analyzer $ana)
   {
-    $this->Analyzer      = $ana;
-    $this->MaxSpeed      = $this->Analyzer->Main->Config->get("Speed.MaxMove");
-    $this->Threshold     = $this->Analyzer->Main->Config->get("Speed.Threshold");
-    $this->Counter       = 0;
-    $this->Leniency      = 0.2;
-    $this->MotionSeconds = $this->Analyzer->Main->advancedConfig->get("MOVE_MOTION_BYPASS_SECONDS");
-    $this->IceSeconds    = $this->Analyzer->Main->advancedConfig->get("MOVE_ICE_BYPASS_SECONDS"); #TODO: properly account changes for ice blocks
+    $this->Analyzer        = $ana;
+    $this->ConfiguredSpeed = $this->Analyzer->Main->Config->get("Speed.MaxMove");
+    $this->Threshold       = $this->Analyzer->Main->Config->get("Speed.Threshold");
+    $this->Counter         = 0;
+    $this->Leniency        = 0.2;
+    $this->MotionSeconds   = $this->Analyzer->Main->advancedConfig->get("MOVE_MOTION_BYPASS_SECONDS");
+    $this->IceSeconds      = $this->Analyzer->Main->advancedConfig->get("MOVE_ICE_BYPASS_SECONDS"); #TODO: properly account changes for ice blocks
   }
 
   /**
@@ -55,6 +57,16 @@ class SpeedCheck
     if (!$this->Analyzer->Main->Config->get("Speed")) return;
     if ($this->Analyzer->Player->getGamemode() == Player::CREATIVE) return;
     if ($this->Analyzer->Player->getGamemode() == Player::SPECTATOR) return;
+    # check if all blocks above the player are air
+    # if they aren't, adjust speed limit
+    if (!$this->Analyzer->areAllBlocksAboveAir())
+    {
+      $this->MaxSpeed = ($this->ConfiguredSpeed)*1.25;
+    }
+    else
+    {
+      $this->MaxSpeed = $this->ConfiguredSpeed;
+    }
     $name = $this->Analyzer->PlayerName;
     $speed = $this->Analyzer->XZSpeed;
     $currentTick = (double)$this->Analyzer->Server->getTick();
