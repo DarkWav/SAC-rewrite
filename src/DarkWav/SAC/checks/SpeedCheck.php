@@ -40,6 +40,7 @@ class SpeedCheck
   public function __construct(Analyzer $ana)
   {
     $this->Analyzer        = $ana;
+    $this->MaxSpeed        = 0.0;
     $this->ConfiguredSpeed = $this->Analyzer->Main->Config->get("Speed.MaxMove");
     $this->Threshold       = $this->Analyzer->Main->Config->get("Speed.Threshold");
     $this->Counter         = 0;
