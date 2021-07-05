@@ -605,6 +605,7 @@ class Analyzer
     $posY        = $this->Player->getY() + 2;
     $posZ        = $this->Player->getZ();
 
+    # loop through 3x3 square above player head to check for any non-air blocks
     for ($xidx = $posX-1; $xidx <= $posX+1; $xidx = $xidx + 1)
     {
       for ($zidx = $posZ-1; $zidx <= $posZ+1; $zidx = $zidx + 1)
@@ -620,6 +621,23 @@ class Analyzer
     }
     $this->Logger->debug(TextFormat::ESCAPE.$this->Colorized."[SAC] [Player: ".$this->PlayerName."] [Debug: Movement] > areAllBlocksAboveAir: true");
     return true;
+  }
+
+  public function getCurrentFrictionFactor() : float
+  {
+    $level          = $this->Player->getLevel();
+    $pos            = new Vector3(($this->Player->getX()), ($this->Player->getY() - 1), ($this->Player->getZ())); # define position of block below player
+    if($level->getBlock($pos)->getId() != Block::AIR) # only use friction factor if block below isn't air
+    {
+      $frictionFactor = $level->getBlock($pos)->getFrictionFactor(); # get friction factor from block
+    }
+    else # use block that is two blocks below otherwise
+    {
+      $pos->y = ($this->Player->getY() - 2);
+      $frictionFactor = $level->getBlock($pos)->getFrictionFactor();
+    }
+    $this->Logger->debug(TextFormat::ESCAPE.$this->Colorized."[SAC] [Player: ".$this->PlayerName."] [Debug: Movement] > Friction Factor: $frictionFactor");
+    return $frictionFactor;
   }
 
 }

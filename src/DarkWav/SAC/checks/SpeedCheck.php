@@ -68,9 +68,12 @@ class SpeedCheck
     {
       $this->MaxSpeed = $this->ConfiguredSpeed;
     }
+    # adapt MaxSpeed to friction factor of block below, don't change anything when on normal blocks
+    $this->MaxSpeed = ($this->MaxSpeed)/(0.6);
+    $this->MaxSpeed = ($this->MaxSpeed)*($this->Analyzer->getCurrentFrictionFactor());
     $name = $this->Analyzer->PlayerName;
     $speed = $this->Analyzer->XZSpeed;
-    $currentTick = (double)$this->Analyzer->Server->getTick();
+    $currentTick = (float)$this->Analyzer->Server->getTick();
     if((($currentTick) - ($this->Analyzer->lastMotionTick)) <= (($this->MotionSeconds)*20)) return; #check if enough time since the last Motion has elapsed
     
     if($this->Analyzer->ignoredMove)
