@@ -5,7 +5,7 @@
 - Angle <b>(complete)</b>
 - CombatHeuristics <b>(in progress, 90% complete)</b>
 - FastBow <b>(in progress, 5% complete)</b>
-- Fly (to be discussed)
+- Fly (not started)
 - Glide (not started)
 - NoClip (not started)
 - Reach <b>(complete)</b>
