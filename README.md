@@ -10,9 +10,9 @@
 - NoClip (not started)
 - Reach <b>(complete)</b>
 - Regen <b>(in progress, 5% complete)</b>
-- Speed <b>(in progress, 98% complete)</b>
+- Speed <b>(complete)</b>
 - Spider (not started)
 - VClip (not started)
 
-## Current Snapshot: 4.0.18
+## Current Snapshot: 4.0.19
 ### This is currently not usable for production, but any testing and help is appreciated<br>If you need a production version, take a look at [SAC](https://github.com/DarkWav/SAC).

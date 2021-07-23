@@ -155,7 +155,7 @@ class Analyzer
   /** @var float */
   public float $YDistance;
   /** @var int */
-  public int $PreviousTick;
+  public int $PreviousMoveTick;
   /** @var float[] */
   public array $XZTimeRingBuffer;
   /** @var float[] */
@@ -190,6 +190,21 @@ class Analyzer
   public float $TimeDiff;
   /** @var int */
   public int $lastMotionTick;
+
+  #bow shooting
+
+  /** @var int */
+  public int $PreviousShootBowTick;
+  /** @var float[] */
+  public array $ShootBowRingBuffer;
+  /** @var int */
+  public int $ShootBowRingBufferSize;
+  /** @var int */
+  public int $ShootBowRingBufferIndex;
+  /** @var float */
+  public float $ShootBowTimeSum;
+  /** @var float */
+  public float $ShootBowAverageLatency;
 
   /**
    * Analyzer constructor.
@@ -278,7 +293,7 @@ class Analyzer
     $this->ToYPos                  = new Vector3(0.0, 0.0, 0.0);
     $this->XZDistance              = 0.0;
     $this->YDistance               = 0.0;
-    $this->PreviousTick            = -1;
+    $this->PreviousMoveTick            = -1;
     $this->XZRingBufferSize        = 8;
     $this->YRingBufferSize         = 8;
     $this->XZRingBufferIndex       = 0;
@@ -296,6 +311,15 @@ class Analyzer
     $this->ignoredMove             = false;
     $this->TimeDiff                = 0;
     $this->lastMotionTick          = -1;
+
+    #processPlayerShootsBow() data
+
+    $this->PreviousShootBowTick    = -1;
+    $this->ShootBowTimeSum         = 0.0;
+    $this->ShootBowRingBufferSize  = 4;
+    $this->ShootBowRingBuffer      = array_fill(0, $this->hitAngleXZRingBufferSize, 0.0);;
+    $this->ShootBowRingBufferIndex = 0;
+    $this->ShootBowAverageLatency  = 0.0;
   }
 
   # Event handlers
@@ -400,9 +424,9 @@ class Analyzer
 
     $Tick               = $this->Server->getTick();
     $TPS                = (float)$this->Server->getTicksPerSecond();
-    $TickCount          = ($Tick - $this->PreviousTick);
+    $TickCount          = ($Tick - $this->PreviousMoveTick);
     $this->TimeDiff           = (float)($TickCount) / (float)$TPS;
-    if ($TPS > 0.0 and $this->PreviousTick != -1.0)
+    if ($TPS > 0.0 and $this->PreviousMoveTick != -1.0)
     {
       if($this->TimeDiff < 2.0) #if move events are divided too far apart each other, ignore the move
       {
@@ -450,7 +474,7 @@ class Analyzer
       }
     }
     $this->Logger->debug(TextFormat::ESCAPE.$this->Colorized."[SAC] [Player: ".$this->PlayerName."] [Debug: Movement] > XZSpeed: ".$this->XZSpeed);
-    $this->PreviousTick = $Tick;
+    $this->PreviousMoveTick = $Tick;
   }
 
   /**
@@ -458,7 +482,24 @@ class Analyzer
    */
   public function processPlayerShootsBow(EntityShootBowEvent $event) : void
   {
-  
+    $Tick                       = $this->Server->getTick();
+    $TPS                        = (float)$this->Server->getTicksPerSecond();
+    if ($this->PreviousShootBowTick == -1)
+    {
+      $this->PreviousShootBowTick = $Tick - 30;
+    }
+    $TickCount                                                = ($Tick - $this->PreviousShootBowTick);
+    $DeltaTime                                                = (float)($TickCount) / (float)$TPS;
+    $this->ShootBowTimeSum                                    = $this->ShootBowTimeSum - $this->ShootBowRingBuffer[$this->ShootBowRingBufferIndex] + $DeltaTime; #ringbuffer time sum (remove oldest, add new)
+    $this->ShootBowRingBuffer[$this->ShootBowRingBufferIndex] = $DeltaTime;
+    $this->ShootBowRingBufferIndex++; #Update ringbuffer position
+    if ($this->ShootBowRingBufferIndex >= $this->ShootBowRingBufferSize)
+    {
+      $this->ShootBowRingBufferIndex = 0; #make ringbuffer index reset once its at the end of the ringbuffer
+    }
+    $this->ShootBowAverageLatency = $this->ShootBowTimeSum / $this->ShootBowRingBufferSize; #calculate average latency between bow shots
+    $this->Logger->debug(TextFormat::ESCAPE.$this->Colorized."[SAC] [Player: ".$this->PlayerName."] [Debug: Combat] > ShootBowLatency: ".$this->ShootBowAverageLatency);
+    $this->PreviousShootBowTick   = $Tick;
   }
   
   /**
@@ -626,15 +667,31 @@ class Analyzer
   public function getCurrentFrictionFactor() : float
   {
     $level          = $this->Player->getLevel();
-    $pos            = new Vector3(($this->Player->getX()), ($this->Player->getY() - 1), ($this->Player->getZ())); # define position of block below player
-    if($level->getBlock($pos)->getId() != Block::AIR) # only use friction factor if block below isn't air
+    $posX           = $this->Player->getX();
+    $posY           = $this->Player->getY() - 1; #define position of block below player
+    $posZ           = $this->Player->getZ();
+    $frictionFactor = $level->getBlock(new Vector3($posX, $posY, $posZ))->getFrictionFactor(); # get friction factor from block
+    for ($xidx = $posX-1; $xidx <= $posX+1; $xidx = $xidx + 1)
     {
-      $frictionFactor = $level->getBlock($pos)->getFrictionFactor(); # get friction factor from block
-    }
-    else # use block that is two blocks below otherwise
-    {
-      $pos->y = ($this->Player->getY() - 2);
-      $frictionFactor = $level->getBlock($pos)->getFrictionFactor();
+      for ($zidx = $posZ-1; $zidx <= $posZ+1; $zidx = $zidx + 1)
+      {
+        $pos        = new Vector3($xidx, $posY, $zidx);
+        if($level->getBlock($pos)->getId() != Block::AIR) # only use friction factor if block below isn't air
+        {
+          if($frictionFactor <= $level->getBlock($pos)->getFrictionFactor()) # use new friction factor only if it has a higher value
+          {
+            $frictionFactor = $level->getBlock($pos)->getFrictionFactor();
+          }
+        }
+        else # use block that is two blocks below otherwise
+        {
+          $pos->y = ($this->Player->getY() - 2);
+          if($frictionFactor <= $level->getBlock($pos)->getFrictionFactor())
+          {
+            $frictionFactor = $level->getBlock($pos)->getFrictionFactor();
+          }
+        }
+      }
     }
     $this->Logger->debug(TextFormat::ESCAPE.$this->Colorized."[SAC] [Player: ".$this->PlayerName."] [Debug: Movement] > Friction Factor: $frictionFactor");
     return $frictionFactor;
