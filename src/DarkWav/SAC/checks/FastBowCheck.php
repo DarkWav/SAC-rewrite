@@ -8,7 +8,7 @@ namespace DarkWav\SAC\checks;
  *  Copyright (C) 2016-2021 DarkWav and others.
  */
 
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 
 use DarkWav\SAC\Main;

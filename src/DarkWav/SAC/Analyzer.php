@@ -14,13 +14,13 @@ use pocketmine\event\entity\EntityMotionEvent;
 use pocketmine\event\entity\EntityShootBowEvent;
 use pocketmine\event\entity\EntityRegainHealthEvent;
 use pocketmine\event\player\PlayerMoveEvent;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\Server;
 use pocketmine\utils\MainLogger;
 use pocketmine\utils\TextFormat;
 use pocketmine\math\Vector3;
-use pocketmine\level\Level;
-use pocketmine\block\BlockIds;
+use pocketmine\world\World;
+use pocketmine\block\BlockLegacyIds as BlockIds;
 use pocketmine\block\Block;
 
 class Analyzer
@@ -358,9 +358,9 @@ class Analyzer
    */
   public function onPlayerReceivesMotion(EntityMotionEvent $event): void
   {
-    if(($event->getVector()->getX() != 0) || ($event->getVector()->getY() != 0) || ($event->getVector()->getZ() != 0)) #ignore motions that don't actually move the player
+    if(($event->getVector()->x != 0) || ($event->getVector()->y != 0) || ($event->getVector()->z != 0)) #ignore motions that don't actually move the player
     {
-      $this->lastMotionTick = (float)$this->Server->getTick();
+      $this->lastMotionTick = $this->Server->getTick();
       $this->Logger->debug(TextFormat::ESCAPE.$this->Colorized."[SAC] [Player: ".$this->PlayerName."] [Debug: Movement] > Motion Received!");
     }
   }
@@ -415,11 +415,11 @@ class Analyzer
   public function processPlayerMoveEvent(PlayerMoveEvent $event) : void
   {
     #calculate distance travelled in the event itself in XZ and Y axis.
-    $this->FromXZPos    = new Vector3($event->getFrom()->getX(), 0.0, $event->getFrom()->getZ());
-    $this->ToXZPos      = new Vector3($event->getTo()->getX()  , 0.0, $event->getTo()->getZ()  );
+    $this->FromXZPos    = new Vector3($event->getFrom()->x, 0.0, $event->getFrom()->z);
+    $this->ToXZPos      = new Vector3($event->getTo()->x  , 0.0, $event->getTo()->z  );
     $this->XZDistance   = $this->FromXZPos->distance($this->ToXZPos);
-    $this->FromYPos     = new Vector3(0.0, $event->getFrom()->getY(), 0.0);
-    $this->ToYPos       = new Vector3(0.0, $event->getTo()->getY()  , 0.0);
+    $this->FromYPos     = new Vector3(0.0, $event->getFrom()->y, 0.0);
+    $this->ToYPos       = new Vector3(0.0, $event->getTo()->y  , 0.0);
     $this->YDistance    = $this->FromYPos->distance($this->ToYPos);
 
     $Tick               = $this->Server->getTick();
@@ -526,16 +526,16 @@ class Analyzer
       $this->isPvp = false;
     }
     $name = $this->PlayerName;
-    $this->damagedEntityPosition      = new Vector3($damagedEntity->getX(), $damagedEntity->getY(), $damagedEntity->getZ());
-    $this->damagedEntityPositionXZ    = new Vector3($damagedEntity->getX(), 0                     , $damagedEntity->getZ());
-    $this->playerPosition             = new Vector3($this->Player->getX() , $this->Player->getY() , $this->Player->getZ() );
-    $this->playerPositionXZ           = new Vector3($this->Player->getX() , 0                     , $this->Player->getZ() );
+    $this->damagedEntityPosition      = new Vector3($damagedEntity->getPosition()->x, $damagedEntity->getPosition()->y, $damagedEntity->getPosition()->z);
+    $this->damagedEntityPositionXZ    = new Vector3($damagedEntity->getPosition()->x, 0                     , $damagedEntity->getPosition()->z);
+    $this->playerPosition             = new Vector3($this->Player->getPosition()->x , $this->Player->getPosition()->y , $this->Player->getPosition()->z );
+    $this->playerPositionXZ           = new Vector3($this->Player->getPosition()->x , 0                     , $this->Player->getPosition()->z );
     $this->playerFacingDirection      = $this->Player->getDirectionVector()->normalize();
     $this->playerFacingDirectionXZ    = $this->Player->getDirectionVector();
     $this->playerFacingDirectionXZ->y = 0;
     $this->playerFacingDirectionXZ    = $this->playerFacingDirectionXZ->normalize();
-    $this->directionToTarget          = $this->damagedEntityPosition->subtract($this->playerPosition)->normalize();
-    $this->directionToTargetXZ        = $this->damagedEntityPositionXZ->subtract($this->playerPositionXZ)->normalize();
+    $this->directionToTarget          = $this->damagedEntityPosition->subtractVector($this->playerPosition)->normalize();
+    $this->directionToTargetXZ        = $this->damagedEntityPositionXZ->subtractVector($this->playerPositionXZ)->normalize();
     $this->headMove                   = $this->playerFacingDirectionXZ->distance($this->lastPlayerFacingDirectionXZ);
     $this->hitDistance                = $this->playerPosition->distance($this->damagedEntityPosition);
     $this->hitDistanceXZ              = $this->playerPositionXZ->distance($this->damagedEntityPositionXZ);
@@ -589,7 +589,7 @@ class Analyzer
         $this->hitTimeDifferenceRingBufferIndex = 0; #make ringbuffer index reset once its at the end of the ringbuffer
       }
       $this->averageHitTimeDifference = $this->hitTimeDifferenceSum / $this->hitTimeDifferenceRingBufferSize;
-      $this->Logger->debug(TextFormat::ESCAPE.$this->Colorized."[SAC] [Player: $name] [Debug: Combat] > $name > AVERAGE TimeDiff: ".$this->averagehitTimeDifference);
+      $this->Logger->debug(TextFormat::ESCAPE.$this->Colorized."[SAC] [Player: $name] [Debug: Combat] > $name > AVERAGE TimeDiff: ".$this->averageHitTimeDifference);
       if($this->averageHitTimeDifference > 0)
       {
         $this->averageCPS = (1 / $this->averageHitTimeDifference);
@@ -641,10 +641,10 @@ class Analyzer
   
   public function areAllBlocksAboveAir() : bool
   {
-    $level       = $this->Player->getLevel();
-    $posX        = $this->Player->getX();
-    $posY        = $this->Player->getY() + 2;
-    $posZ        = $this->Player->getZ();
+    $level       = $this->Player->getWorld();
+    $posX        = $this->Player->getPosition()->x;
+    $posY        = $this->Player->getPosition()->y + 2;
+    $posZ        = $this->Player->getPosition()->z;
 
     # loop through 3x3 square above player head to check for any non-air blocks
     for ($xidx = $posX-1; $xidx <= $posX+1; $xidx = $xidx + 1)
@@ -653,7 +653,7 @@ class Analyzer
       {
         $pos   = new Vector3($xidx, $posY, $zidx);
         $block = $level->getBlock($pos)->getId();
-        if ($block != Block::AIR)
+        if ($block != BlockIds::AIR)
         {
           $this->Logger->debug(TextFormat::ESCAPE.$this->Colorized."[SAC] [Player: ".$this->PlayerName."] [Debug: Movement] > areAllBlocksAboveAir: false");
           return false;
@@ -666,17 +666,17 @@ class Analyzer
 
   public function getCurrentFrictionFactor() : float
   {
-    $level          = $this->Player->getLevel();
-    $posX           = $this->Player->getX();
-    $posY           = $this->Player->getY() - 1; #define position of block below player
-    $posZ           = $this->Player->getZ();
+    $level          = $this->Player->getWorld();
+    $posX           = $this->Player->getPosition()->x;
+    $posY           = $this->Player->getPosition()->y - 1; #define position of block below player
+    $posZ           = $this->Player->getPosition()->z;
     $frictionFactor = $level->getBlock(new Vector3($posX, $posY, $posZ))->getFrictionFactor(); # get friction factor from block
     for ($xidx = $posX-1; $xidx <= $posX+1; $xidx = $xidx + 1)
     {
       for ($zidx = $posZ-1; $zidx <= $posZ+1; $zidx = $zidx + 1)
       {
         $pos        = new Vector3($xidx, $posY, $zidx);
-        if($level->getBlock($pos)->getId() != Block::AIR) # only use friction factor if block below isn't air
+        if($level->getBlock($pos)->getId() != BlockIds::AIR) # only use friction factor if block below isn't air
         {
           if($frictionFactor <= $level->getBlock($pos)->getFrictionFactor()) # use new friction factor only if it has a higher value
           {
@@ -685,7 +685,7 @@ class Analyzer
         }
         else # use block that is two blocks below otherwise
         {
-          $pos->y = ($this->Player->getY() - 2);
+          $pos->y = ($this->Player->getPosition()->y - 2);
           if($frictionFactor <= $level->getBlock($pos)->getFrictionFactor())
           {
             $frictionFactor = $level->getBlock($pos)->getFrictionFactor();

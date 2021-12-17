@@ -47,7 +47,7 @@ class ReachCheck
     $this->Range = $this->Analyzer->hitDistance;
     if($this->Range > $this->MaxRange)
     {
-      $event->setCancelled(true);
+      $event->cancel();
       $this->Counter+=3;
     }
     elseif($this->Counter > 0)

@@ -24,13 +24,13 @@ class Main extends PluginBase
   /** @var int */
   public int $Colorized;
   /** @var String */
-  public String $version = "4.0.19";
+  public String $version = "4.1.0";
   /** @var String */
   public String $codename = "no codename yet lol"; #TODO: think of a decent codename for v4 ;)
   /** @var String[] */
-  public array $supported_config_versions = ["4.0.16", "4.0.17", "4.0.18", "4.0.19"];
+  public array $supported_config_versions = ["4.0.16", "4.0.17", "4.0.18", "4.0.19", "4.1.0"];
   /** @var String */
-  public String $config_version = "1.0.3";
+  public String $config_version = "1.0.4";
   /** @var MainLogger */
   public MainLogger $logger;
   /** @var Server */
@@ -72,7 +72,7 @@ class Main extends PluginBase
 
     foreach($this->server->getOnlinePlayers() as $player)
     {
-      $uuid     = $player->getRawUniqueID();
+      $uuid     = (String)$player->getUniqueId();
       $name     = $player->getName();
       $olduuid  = null;
       $analyzer = null;

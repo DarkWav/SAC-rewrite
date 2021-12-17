@@ -9,8 +9,9 @@ namespace DarkWav\SAC\checks;
  */
 
 use pocketmine\event\player\PlayerMoveEvent;
-use pocketmine\Player;
-use pocketmine\entity\Effect;
+use pocketmine\player\Player;
+use pocketmine\player\GameMode;
+use pocketmine\entity\effect\VanillaEffects;
 
 use DarkWav\SAC\Analyzer;
 
@@ -30,8 +31,6 @@ class SpeedCheck
   public float $Leniency;
   /** @var int */
   public int $MotionSeconds;
-  /** @var int */
-  public int $IceSeconds;
 
   /**
    * SpeedCheck constructor.
@@ -46,7 +45,6 @@ class SpeedCheck
     $this->Counter         = 0;
     $this->Leniency        = 0.2;
     $this->MotionSeconds   = $this->Analyzer->Main->advancedConfig->get("MOVE_MOTION_BYPASS_SECONDS");
-    $this->IceSeconds      = $this->Analyzer->Main->advancedConfig->get("MOVE_ICE_BYPASS_SECONDS"); #TODO: properly account changes for ice blocks
   }
 
   /**
@@ -56,8 +54,8 @@ class SpeedCheck
   {
     if ($this->Analyzer->Player->getAllowFlight()) return;
     if (!$this->Analyzer->Main->Config->get("Speed")) return;
-    if ($this->Analyzer->Player->getGamemode() == Player::CREATIVE) return;
-    if ($this->Analyzer->Player->getGamemode() == Player::SPECTATOR) return;
+    if ($this->Analyzer->Player->getGamemode()->equals(GameMode::CREATIVE())) return;
+    if ($this->Analyzer->Player->getGamemode()->equals(GameMode::SPECTATOR())) return;
     # check if all blocks above the player are air
     # if they aren't, adjust speed limit
     if (!$this->Analyzer->areAllBlocksAboveAir())
@@ -78,14 +76,14 @@ class SpeedCheck
     
     if($this->Analyzer->ignoredMove)
     {
-      if($this->Analyzer->Player->hasEffect(Effect::SPEED))
+      if($this->Analyzer->Player->getEffects()->has(VanillaEffects::SPEED()))
       {
-        $amp        = $this->Analyzer->Player->getEffect(Effect::SPEED)->getEffectLevel();
+        $amp        = $this->Analyzer->Player->getEffects()->get(VanillaEffects::SPEED())->getEffectLevel();
         $speedlimit = ($this->MaxSpeed)*(1+(($this->Leniency)*($amp)));
         $maxdistance = $speedlimit * $this->Analyzer->TimeDiff; #calculate maximum distance for ingored move
         if($this->Analyzer->XZDistance > $maxdistance)
         {
-          $event->setCancelled(true); #cancel move event if travelled distance is too high nevertheless, but do not raise counter.
+          $event->cancel(); #cancel move event if travelled distance is too high nevertheless, but do not raise counter.
         }
       }
       else
@@ -93,13 +91,13 @@ class SpeedCheck
         $maxdistance = $this->MaxSpeed * $this->Analyzer->TimeDiff; #calculate maximum distance for ingored move
         if($this->Analyzer->XZDistance > $maxdistance)
         {
-          $event->setCancelled(true); #same applies without speed effect.
+          $event->cancel(); #same applies without speed effect.
         }
       }
     }
-    elseif($this->Analyzer->Player->hasEffect(Effect::SPEED))
+    elseif($this->Analyzer->Player->getEffects()->has(VanillaEffects::SPEED()))
     {
-      $amp        = $this->Analyzer->Player->getEffect(Effect::SPEED)->getEffectLevel();
+      $amp        = $this->Analyzer->Player->getEffects()->get(VanillaEffects::SPEED())->getEffectLevel();
       $speedlimit = ($this->MaxSpeed)*(1+(($this->Leniency)*($amp)));
       if($speed > $speedlimit)
       {
@@ -121,7 +119,7 @@ class SpeedCheck
     
     if($this->Counter >= ($this->Threshold * 2))
     {
-      $event->setCancelled(true);
+      $event->cancel();
       if($this->Analyzer->Main->Config->get("Speed.Punishment") == "kick")
       {
         $this->Analyzer->kickPlayer($this->Analyzer->Main->Config->get("Speed.KickMessage"));

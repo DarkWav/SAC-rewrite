@@ -9,7 +9,7 @@ namespace DarkWav\SAC;
  */
 
 use pocketmine\utils\TextFormat;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\scheduler\Task;
 
 class KickTask extends Task
@@ -37,12 +37,13 @@ class KickTask extends Task
   /**
    * @param int $currentTick
    */
-  public function onRun(int $currentTick) : void
+  public function onRun() : void
   {
     if ($this->Player != null && $this->Player->isOnline())
     {
-      $this->Player->close("", TextFormat::ESCAPE.$this->Main->Colorized . $this->Message);
+      $this->Player->kick(TextFormat::ESCAPE.$this->Main->Colorized . $this->Message, "");
       $name = $this->Player->getName();
+      $this->Main->logger->info(TextFormat::ESCAPE.$this->Main->Colorized . $name .": ". $this->Message);
       $msg = "[SAC] > $name was kicked for Cheating. I am always watching you.";
       $this->Main->server->broadcastMessage(TextFormat::ESCAPE.$this->Main->Colorized . $msg);
     }

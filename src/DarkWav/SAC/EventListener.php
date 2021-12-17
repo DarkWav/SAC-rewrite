@@ -14,7 +14,7 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerJoinEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\entity\EntityDamageByEntityEvent;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\Server;
 use pocketmine\utils\MainLogger;
 
@@ -52,7 +52,7 @@ class EventListener implements Listener
   public function onJoin(PlayerJoinEvent $event) : void
   {
     $plr      = $event->getPlayer();
-    $uuid     = $plr->getRawUniqueID();
+    $uuid     = (String)$plr->getUniqueId();
     $name     = $plr->getName();
     $olduuid  = null;
     $analyzer = null;
@@ -85,7 +85,7 @@ class EventListener implements Listener
   public function onQuit(PlayerQuitEvent $event) : void
   {
     $plr      = $event->getPlayer();
-    $uuid     = $plr->getRawUniqueID();
+    $uuid     = (String)$plr->getUniqueId();
     if (!empty($plr) and !empty($uuid) and array_key_exists($uuid , $this->Main->Analyzers))
     {
       $analyzer = $this->Main->Analyzers[$uuid];
@@ -103,7 +103,7 @@ class EventListener implements Listener
   public function onMove(PlayerMoveEvent $event) : void
   {
     $plr      = $event->getPlayer();
-    $uuid     = $plr->getRawUniqueID();
+    $uuid     = (String)$plr->getUniqueId();
     if (array_key_exists($uuid , $this->Main->Analyzers))
     {
       if($plr != null and $this->Main->Analyzers[$uuid]->Player != null)
@@ -121,7 +121,7 @@ class EventListener implements Listener
     $entity = $event->getEntity();
     if($entity instanceof Player)
     {
-      $entityuuid = $entity->getRawUniqueID();
+      $entityuuid = (String)$entity->getUniqueId();
       if (array_key_exists($entityuuid , $this->Main->Analyzers))
       {
         if($entity != null and $this->Main->Analyzers[$entityuuid]->Player != null)
@@ -140,7 +140,7 @@ class EventListener implements Listener
     $entity = $event->getEntity();
     if($entity instanceof Player)
     {
-      $entityuuid = $entity->getRawUniqueID();
+      $entityuuid = (String)$entity->getUniqueId();
       if (array_key_exists($entityuuid , $this->Main->Analyzers))
       {
         if($entity != null and $this->Main->Analyzers[$entityuuid]->Player != null)
@@ -159,7 +159,7 @@ class EventListener implements Listener
     $entity = $event->getEntity();
     if($entity instanceof Player)
     {
-      $entityuuid = $entity->getRawUniqueID();
+      $entityuuid = (String)$entity->getUniqueId();
       if (array_key_exists($entityuuid , $this->Main->Analyzers))
       {
         if($entity != null and $this->Main->Analyzers[$entityuuid]->Player != null)
@@ -183,7 +183,7 @@ class EventListener implements Listener
     $entity       = $event->getEntity();
     if($entity instanceof Player)
     {
-      $entityuuid   = $entity->getRawUniqueID();
+      $entityuuid   = (String)$entity->getUniqueId();
       if (array_key_exists($entityuuid , $this->Main->Analyzers))
       {
         if($entity != null and $this->Main->Analyzers[$entityuuid]->Player != null)
@@ -195,9 +195,9 @@ class EventListener implements Listener
     if($event instanceof EntityDamageByEntityEvent)
     {
       $damager      =  $event->getDamager();
-      if($damager instanceof Player)
+      if($damager instanceof Player && $entity instanceof Player) #only watch PVP
       {
-        $damageruuid  =  $damager->getRawUniqueID();
+        $damageruuid  =  (String)$damager->getUniqueId();
         if (array_key_exists($damageruuid , $this->Main->Analyzers))
         {
           if($damager != null and $this->Main->Analyzers[$damageruuid]->Player != null)

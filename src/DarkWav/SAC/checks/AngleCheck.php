@@ -9,7 +9,7 @@ namespace DarkWav\SAC\checks;
  */
 
 use pocketmine\event\entity\EntityDamageByEntityEvent;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\utils\TextFormat;
 
 use DarkWav\SAC\Main;
@@ -51,7 +51,7 @@ class AngleCheck
     $name = $this->Analyzer->PlayerName;
     if (($this->Analyzer->hitAngleXZ > $this->Limit) and ($this->Analyzer->hitDistanceXZ >= $this->MinDistance))
     {
-      $event->setCancelled(true);
+      $event->cancel();
       $this->Counter+=3;
     }
     elseif($this->Counter > 0)

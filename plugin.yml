@@ -1,9 +1,14 @@
 name: ShadowAntiCheat
 main: DarkWav\SAC\Main
-version: 4.0.19
+version: 4.1.0
 authors: ["DarkWav", "radondev"]
-api: [3.0.0]
+api: [4.0.0]
 commands:
   shadowanticheat:
     description: Shows ShadowAntiCheat version.
     aliases: ["ShadowAntiCheat","sac","SAC","anticheat","AntiCheat"]
+    permission: shadowanticheat.command.shadowanticheat
+permissions:
+  shadowanticheat.command.shadowanticheat:
+    default: true
+    description: Allows user to show ShadowAntiCheat version.
