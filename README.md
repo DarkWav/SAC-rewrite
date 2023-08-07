@@ -1,6 +1,8 @@
 # SAC-rewrite [![](https://img.shields.io/github/license/DarkWav/SAC-rewrite.svg?label=License)](https://github.com/DarkWav/SAC-rewrite/blob/master/LICENSE)
 ## The rewritten version of ShadowAntiCheat for Minecraft:Bedrock Edition
 
+## Status: Discontinued Indefinitely. Mojang has unfortunately decided that they want to implement EULA changes that I consider completely unacceptable, hence I am unwilling to provide any content for their game at the moment: https://www.minecraft.net/en-us/usage-guidelines
+
 ## Curently planned Checks:
 - Angle <b>(complete)</b>
 - CombatHeuristics <b>(in progress, 70% complete)</b>
